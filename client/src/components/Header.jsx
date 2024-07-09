@@ -15,11 +15,11 @@ function Header() {
           <input type='text' placeholder='Search..' className='font-["Outfit"] bg-transparent focus:outline-none font-[300] w-24 sm:w-60 text-sm sm:text-md'/>
           <button type='submit'><IoSearchOutline /></button>
         </form>
-        <div className='flex space-x-6 font-["Outfit"] font-[300] text-md text-slate-600'>
-            <Link to="/"><a className='hover:underline hover:decoration-1 hidden sm:inline'>Home</a></Link>
-            <Link to="/about"><a className='hover:underline hover:decoration-1 hidden sm:inline'>About</a></Link>
-            <Link to="/sign-in"><a className='hover:underline hover:decoration-1'>SignIn</a></Link>
-        </div>
+        <ul className='flex space-x-6 font-["Outfit"] font-[300] text-md text-slate-600'>
+            <Link to="/"><li className='hover:underline hover:decoration-1 hidden sm:inline'>Home</li></Link>
+            <Link to="/about"><li className='hover:underline hover:decoration-1 hidden sm:inline'>About</li></Link>
+            <Link to="/sign-in"><li className='hover:underline hover:decoration-1'>SignIn</li></Link>
+        </ul>
     </header>
     </div>
   )
