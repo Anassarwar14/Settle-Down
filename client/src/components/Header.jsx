@@ -18,7 +18,7 @@ function Header() {
         <ul className='flex space-x-7 font-[300] text-md text-slate-600'>
             <Link to="/"><li className='hover:underline hover:decoration-1 hidden sm:inline'>Home</li></Link>
             <Link to="/about"><li className='hover:underline hover:decoration-1 hidden sm:inline'>About</li></Link>
-            <Link to="/sign-in"><li className='hover:underline hover:decoration-1'>SignIn</li></Link>
+            <Link to="/sign-in"><li className='hover:underline hover:decoration-1'>Sign In</li></Link>
         </ul>
     </header>
     </div>
