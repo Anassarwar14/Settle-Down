@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { FaGoogle } from "react-icons/fa";
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { signInStart, signInSuccess, signInFailure, resetError } from '../redux/user/userSlice';
+import OAuth from '../components/OAuth';
 
 function SignIn() {
   const [formData, setFormData] = useState({});
@@ -62,7 +62,7 @@ function SignIn() {
             </svg> Loading...
           </div> : "Sign In"}
         </button>
-        <button type='' className='flex justify-center items-center bg-rose-600 text-white p-3 rounded-3xl mb-3 hover:opacity-95'><FaGoogle /><span className='ml-2'>Continue with Google</span></button>
+        <OAuth />
       </form>
       <p className='text-sm text-zinc-600 inline mr-2 ml-2'>Don't have an Account?</p>
       <Link to={"/sign-up"}>

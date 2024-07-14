@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { FaGoogle } from "react-icons/fa";
 import { Link, useNavigate } from 'react-router-dom';
+import OAuth from '../components/OAuth';
 
 function SignUp() {
   const [formData, setFormData] = useState({});
@@ -63,7 +63,7 @@ function SignUp() {
             </svg> Loading...
           </div> : "Sign Up"}
         </button>
-        <button type='' className='flex justify-center items-center bg-rose-600 text-white p-3 rounded-3xl mb-4 hover:opacity-95'><FaGoogle /><span className='ml-2'>Continue with Google</span></button>
+        <OAuth />
       </form>
       <p className='text-sm text-zinc-600 inline mr-2 ml-2'>Have an Account?</p>
       <Link to={"/sign-in"}>
