@@ -1,7 +1,11 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { IoSearchOutline } from "react-icons/io5";
+import { useSelector } from 'react-redux';
+
 function Header() {
+  const { currentUser } = useSelector((state) => state.user);
+  
   return (
     <div className='bg-slate-200 shadow-md'>
     <header className='flex items-center justify-between px-3 py-2 max-w-6xl mx-auto'>
@@ -15,10 +19,16 @@ function Header() {
           <input type='text' placeholder='Search..' className='bg-transparent focus:outline-none font-[300] w-24 sm:w-60 text-sm sm:text-md'/>
           <button type='submit'><IoSearchOutline /></button>
         </form>
-        <ul className='flex space-x-7 font-[300] text-md text-slate-600'>
+        <ul className='flex items-center space-x-7 font-[300] text-md text-slate-600'>
             <Link to="/"><li className='hover:underline hover:decoration-1 hidden sm:inline'>Home</li></Link>
             <Link to="/about"><li className='hover:underline hover:decoration-1 hidden sm:inline'>About</li></Link>
-            <Link to="/sign-in"><li className='hover:underline hover:decoration-1'>Sign In</li></Link>
+            <Link to="/profile">
+              {currentUser ? (
+                <img src={ currentUser.avatar } alt='profile' className='rounded-full object-cover max-w-8 sm:max-w-10' />
+              ): 
+                <li className='hover:underline hover:decoration-1'>Sign In</li>
+              }
+            </Link>
         </ul>
     </header>
     </div>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { FaGoogle } from "react-icons/fa";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
 import { app } from '../firebase';
@@ -14,7 +14,7 @@ function OAuth() {
         try {
             const provider = new GoogleAuthProvider();
             const auth = getAuth(app);
-
+            
             const result = await signInWithPopup(auth, provider);
             const res = await fetch('/api/auth/google', 
             {
