@@ -6,3 +6,17 @@ body{
     font-family: "Outfit", sans-serif;
     background-color: #f3faf8bb;
 }
+
+.animated-background {
+    background-size: 400%;
+
+    -webkit-animation: animation 5s ease-in-out infinite;
+    -moz-animation: animation 5s ease-in-out infinite;
+    animation: animation 5s ease-in-out infinite;
+}
+
+@keyframes animation {
+    0%,
+    100%{background-position:100% 50%}
+    50%{background-position:0% 50%}
+}
