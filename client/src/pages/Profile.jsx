@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { updateUserStart, updateUserSuccess, updateUserFailure, resetError } from '../redux/user/userSlice';
 import { app } from '../firebase';
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage'
 import { MdOutlineModeEditOutline, MdOutlinePlaylistAdd, MdErrorOutline} from "react-icons/md";
@@ -8,22 +9,22 @@ import { PiSignOut, PiSpinner } from "react-icons/pi";
 import { HiCheckBadge } from "react-icons/hi2";
 
 
-
-  // firebase storage rules code:
-  // allow read;
-  // allow write: if
-  // request.resource.size < 2 * 1024 * 1024 && 
-  // request.resource.contentType.matches('image/.*');
+// ---firebase storage rules code---
+// allow read;
+// allow write: if
+// request.resource.size < 2 * 1024 * 1024 && 
+// request.resource.contentType.matches('image/.*');
 
 function Profile() {
-  const loading = "";
-  const error = "";
-  const { currentUser } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  const { currentUser, loading, error } = useSelector((state) => state.user);
   const [editMode, setEditMode] = useState(false);
   const [file, setFile] = useState(undefined);
   const [filePerc, setFilePerc] = useState(0);
   const [uploadError, setUploadError] = useState(false);
   const [formData, setFormData] = useState({});
+  const [updateSuccess, setUpdateSuccess] = useState(false);
+  const [noChange, setNoChange] = useState(true);
   const fileRef = useRef(null);
 
   useEffect(() => {
@@ -45,24 +46,52 @@ function Profile() {
       },
       (error) => {
         setUploadError(true);
+        setFilePerc(0);
       },
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then
         ((downloadURL) => {
             setFormData((prevState) => {
                 return {...prevState, avatar:downloadURL} 
-            })
+            });
         })
       }
     );
   }
 
-  function handleChange () {
-
+  function handleChange (e) {
+    setFormData((prevState) => {
+      return {...prevState, [e.target.id]:e.target.value}; 
+    });
+    if (error) dispatch(resetError());
+    setNoChange(false);
   }
   
-  function handleSubmit () {
+  async function handleSubmit (e) {
+    e.preventDefault();
+    setFilePerc(0);
+    try {
+      dispatch(updateUserStart());
+      const res = await fetch(`/api/user/update/${currentUser._id}`, 
+        {
+          method: 'POST',
+          headers: {
+            'Content-type': 'application/json',
+          },
+          body: JSON.stringify(formData),
+        }
+      );
 
+      const data = await res.json();
+      if (data.success === false) { 
+        dispatch(updateUserFailure(data.message));
+        return;
+      }
+      dispatch(updateUserSuccess(data));
+      setUpdateSuccess(true);
+    } catch (error) {
+      dispatch(updateUserFailure(error.message))
+    }
   }
 
   function toggleEdit () {
@@ -72,12 +101,12 @@ function Profile() {
 
   return (
     <div className='max-w-md sm:max-w-6xl py-3 sm:py-5 px-8 mx-auto mt-4 sm:mt-7 mb-4 bg-gray-100 shadow-sm border rounded-md'>
-        <div className="flex items-center justify-between">
-          <h1 className='text-2xl font-light text-zinc-700'>My Profile</h1>
-          <button className='flex items-center text-sm gap-1 text-rose-600 hover:underline shadow-sm sm:shadow-md rounded-full px-4 py-1'>Sign Out<PiSignOut /></button>
-        </div>
-      <section className='flex items-center gap-4 max-w-md sm:max-w-6xl mx-auto mt-2 sm:mt-5 bg-gradient-to-tr from-purple-400 from-20% to-indigo-500 animated-background rounded-xl'>
-        <img src={ currentUser.avatar } alt='' className='max-w-[6rem] object-cover rounded-full'/>
+      <div className="flex items-center justify-between">
+        <h1 className='text-2xl font-light text-zinc-700'>My Profile</h1>
+        <button className='flex items-center text-sm gap-1 text-rose-600 hover:underline shadow-sm sm:shadow-md rounded-full px-4 py-1'>Sign Out<PiSignOut /></button>
+      </div>
+      <section className='flex items-center h-24 gap-6 p-14 px-5 mt-3 sm:mt-5 bg-gradient-to-tr from-purple-400 from-20% to-indigo-500 animated-background rounded-xl'>
+        <img src={ currentUser.avatar } alt='' className='w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-full'/>
         <div className='flex-col'>
           <h2 className='text-xl uppercase text-white' >{currentUser.username}</h2>
         </div>
@@ -104,7 +133,7 @@ function Profile() {
           hidden
           accept='image/*'
         />
-        <img src={ formData.avatar || currentUser.avatar } alt='display-img' onClick={() => fileRef.current.click()} className='max-w-[6rem] object-cover rounded-full cursor-pointer mx-auto'/>
+        <img src={ formData.avatar || currentUser.avatar } alt='display-img' onClick={() => {fileRef.current.click(); setUploadError(false);}} className='w-[5.5rem] h-[5.5rem] sm:w-24 sm:h-24 object-cover rounded-full cursor-pointer mx-auto'/>
         <p className='*:flex *:items-center *:gap-2 *:justify-center *:font-light *:text-sm'>
           { uploadError ? 
             <span className='text-red-500'><MdErrorOutline />Error Uploading image! - Max size allowed: 2 MB</span> :
@@ -114,11 +143,11 @@ function Profile() {
             <span className='text-green-500'><HiCheckBadge /> Image Uploaded Successfully!</span>
           }
         </p>
-        <input type='text' placeholder='Username' className='border p-3 rounded-lg hover:bg-gray-200 focus:outline-none focus:border-purple-400 transition ease-in duration-200' id='username' onChange={handleChange}/>
-        <input type='email' placeholder='Email' className='border p-3 rounded-lg hover:bg-gray-200 focus:outline-none focus:border-purple-400  transition ease-in duration-200' id='email' onChange={handleChange}/>
+        <input type='text' placeholder='Username' defaultValue={currentUser.username} className='border p-3 rounded-lg hover:bg-gray-200 focus:outline-none focus:border-purple-400 focus:text-zinc-800 transition ease-in duration-200 text-zinc-500' id='username' onChange={handleChange}/>
+        <input type='email' placeholder='Email' defaultValue={currentUser.email} className='border p-3 rounded-lg hover:bg-gray-200 focus:outline-none focus:border-purple-400 focus:text-zinc-800  transition ease-in duration-200 text-zinc-500' id='email' onChange={handleChange}/>
         <input type='password' placeholder='Password' className='border p-3 rounded-lg hover:bg-gray-200 focus:outline-none focus:border-purple-400  transition ease-in duration-200' id='password' onChange={handleChange}/>
-        {error && <p className='text-red-600 text-sm ml-2'><MdErrorOutline />{error}</p>}
-        <button type='submit' disabled={loading} className='border border-purple-500 transition ease-in duration-150 hover:bg-purple-500 text-purple-700 hover:text-white rounded-3xl p-3 mb-2 min-w-60 mx-auto'>
+        {error && <p className='text-red-600 text-sm ml-2 flex items-center gap-1'><MdErrorOutline />{error}</p>}
+        <button type='submit' disabled={loading || noChange} className='border border-purple-500 transition ease-in duration-150 disabled:border-opacity-10 disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-zinc-500 hover:bg-purple-500 text-purple-700 hover:text-white rounded-3xl p-3 min-w-60 mx-auto'>
           {loading ? 
           <div className='flex items-center justify-center'>
             <svg aria-hidden="true" role="status" className="w-4 h-4 me-3 text-gray-200 animate-spin dark:text-gray-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -127,9 +156,10 @@ function Profile() {
             </svg> Loading...
           </div> : "Update"}
         </button>
+        { updateSuccess && <span className='text-green-500 flex items-center gap-2 justify-center font-light text-sm'><HiCheckBadge /> Updated Successfully!</span>}
       </form>
 
-      <div className='mt-8 rounded-lg border p-5'>  
+      <div className='mt-6 rounded-lg border p-5'>  
         <h2 className='ml-2 text-zinc-700'>Listings</h2>
       </div>
       <button type='button' className='border border-purple-500 ml-4 transition ease-in duration-150 hover:border-white hover:bg-gradient-to-r hover:from-purple-400 hover:from-2% hover:to-indigo-500 text-purple-700 hover:text-white rounded-3xl px-4 py-2 mt-3'>

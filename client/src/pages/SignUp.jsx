@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import OAuth from '../components/OAuth';
+import { MdError } from 'react-icons/md';
 
 function SignUp() {
   const [formData, setFormData] = useState({});
@@ -53,7 +54,7 @@ function SignUp() {
         <input type='text' placeholder='Username' className='border p-3 rounded-lg focus:outline-none focus:border-teal-400 transition ease-in duration-200' id='username' onChange={handleChange}/>
         <input type='email' placeholder='Email' className='border p-3 rounded-lg focus:outline-none focus:border-teal-400 transition ease-in duration-200' id='email' onChange={handleChange}/>
         <input type='password' placeholder='Password' className='border p-3 rounded-lg focus:outline-none focus:border-teal-400 transition ease-in duration-200' id='password' onChange={handleChange}/>
-        {error && <p className='text-red-600 text-sm ml-2'>{error}</p>}
+        {error && <p className='text-red-600 text-sm ml-2 flex items-center gap-1'><MdError/>{error}</p>}
         <button type='submit' disabled={loading} className='border border-teal-500 transition ease-in duration-150 hover:bg-teal-500 text-teal-700 hover:text-white rounded-3xl p-3 -mb-2'>
           {loading ? 
           <div className='flex items-center justify-center'>

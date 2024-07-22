@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { signInStart, signInSuccess, signInFailure, resetError } from '../redux/user/userSlice';
 import OAuth from '../components/OAuth';
+import { MdError } from 'react-icons/md';
 
 function SignIn() {
   const [formData, setFormData] = useState({});
@@ -52,7 +53,7 @@ function SignIn() {
       <form className='flex flex-col gap-5' onSubmit={ handleSubmit }>
         <input type='email' placeholder='Email' className='border p-3 rounded-lg focus:outline-none focus:border-teal-400 transition ease-in duration-200' id='email' onChange={handleChange}/>
         <input type='password' placeholder='Password' className='border p-3 rounded-lg focus:outline-none focus:border-teal-400 transition ease-in duration-200' id='password' onChange={handleChange}/>
-        {error && <p className='text-red-600 text-sm ml-2'>{error}</p>}
+        {error && <p className='text-red-600 text-sm ml-2 flex items-center gap-1'><MdError/>{error}</p>}
         <button type='submit' disabled={loading} className='border border-teal-500 transition ease-in duration-150 hover:bg-teal-500 text-teal-700 hover:text-white rounded-3xl p-3 -mb-2'>
           {loading ? 
           <div className='flex items-center justify-center'>
