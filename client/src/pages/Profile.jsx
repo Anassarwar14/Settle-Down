@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { updateUserStart, updateUserSuccess, updateUserFailure, resetError } from '../redux/user/userSlice';
+import { updateUserStart, updateUserSuccess, updateUserFailure, resetError, deleteUserStart, deleteUserSuccess, deleteUserFailure, signOutStart, signOutSuccess, signOutFailure } from '../redux/user/userSlice';
 import { app } from '../firebase';
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage'
 import { MdOutlineModeEditOutline, MdOutlinePlaylistAdd, MdErrorOutline} from "react-icons/md";
 import { PiSignOut, PiSpinner } from "react-icons/pi";
 import { HiCheckBadge } from "react-icons/hi2";
+import DeleteConfirm from '../components/DeleteConfirm';
 
 
 // ---firebase storage rules code---
@@ -25,6 +25,7 @@ function Profile() {
   const [formData, setFormData] = useState({});
   const [updateSuccess, setUpdateSuccess] = useState(false);
   const [noChange, setNoChange] = useState(true);
+  const [confirmDelete, setConfirmDelete] = useState(false);
   const fileRef = useRef(null);
 
   useEffect(() => {
@@ -94,6 +95,41 @@ function Profile() {
     }
   }
 
+  async function handleDeleteUser () {
+    try {
+      dispatch(deleteUserStart());
+      const res = await fetch(`/api/user/delete/${currentUser._id}`,
+        {
+          method: 'DELETE',
+          headers: {
+            'Content-type': 'application/json',
+          },
+        },
+      )
+      const data = res.json();
+      if(data.success === false)
+        dispatch(deleteUserFailure(data.message));
+      dispatch(deleteUserSuccess());
+    } catch (error) {
+      dispatch(deleteUserFailure(error));
+    }
+  }
+
+  async function handleSignOut () {
+    try {
+      dispatch(signOutStart());
+      const res = await fetch('/api/auth/signout');
+      const data = res.json();
+      if (data.success === false){
+        dispatch(signOutFailure(data.message));
+        return;
+      }
+      dispatch(signOutSuccess(data));
+    } catch (error) {
+      dispatch(signOutFailure(error))
+    }
+  }
+
   function toggleEdit () {
     setEditMode(!editMode);
   }
@@ -103,7 +139,7 @@ function Profile() {
     <div className='max-w-md sm:max-w-6xl py-3 sm:py-5 px-8 mx-auto mt-4 sm:mt-7 mb-4 bg-gray-100 shadow-sm border rounded-md'>
       <div className="flex items-center justify-between">
         <h1 className='text-2xl font-light text-zinc-700'>My Profile</h1>
-        <button className='flex items-center text-sm gap-1 text-rose-600 hover:underline shadow-sm sm:shadow-md rounded-full px-4 py-1'>Sign Out<PiSignOut /></button>
+        <button onClick={handleSignOut} className='flex items-center text-sm gap-1 text-rose-600 hover:underline shadow-sm sm:shadow-md rounded-full px-4 py-1'>Sign Out<PiSignOut /></button>
       </div>
       <section className='flex items-center h-24 gap-6 p-14 px-5 mt-3 sm:mt-5 bg-gradient-to-tr from-purple-400 from-20% to-indigo-500 animated-background rounded-xl'>
         <img src={ currentUser.avatar } alt='' className='w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-full'/>
@@ -169,9 +205,10 @@ function Profile() {
         </div>
       </button>
       <hr className='mt-4 mb-2 '/>
-      <Link to={"/sign-in"}>
-        <span className='text-sm flex items-center justify-center text-red-600 hover:underline hover:decoration-1 hover:underline-offset-4'>Delete Account</span>
-      </Link>
+      <DeleteConfirm showPopUp={confirmDelete} initiateDelete={handleDeleteUser} handleCancel={() => setConfirmDelete(false)}/>
+      <span onClick={() => setConfirmDelete(true)} className='text-sm flex items-center justify-center text-red-600 hover:underline hover:decoration-1 hover:underline-offset-4 cursor-pointer'>
+        Delete Account
+      </span>
     </div>
   )
 }
