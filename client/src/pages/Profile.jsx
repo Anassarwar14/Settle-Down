@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { Link } from 'react-router-dom';
 import { updateUserStart, updateUserSuccess, updateUserFailure, resetError, deleteUserStart, deleteUserSuccess, deleteUserFailure, signOutStart, signOutSuccess, signOutFailure } from '../redux/user/userSlice';
 import { app } from '../firebase';
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage'
@@ -198,12 +199,14 @@ function Profile() {
       <div className='mt-6 rounded-lg border p-5'>  
         <h2 className='ml-2 text-zinc-700'>Listings</h2>
       </div>
-      <button type='button' className='border border-purple-500 ml-4 transition ease-in duration-150 hover:border-white hover:bg-gradient-to-r hover:from-purple-400 hover:from-2% hover:to-indigo-500 text-purple-700 hover:text-white rounded-3xl px-4 py-2 mt-3'>
-        <div className='flex items-center gap-1'>
-          <MdOutlinePlaylistAdd  className='text-lg'/>
-          Create Listing
-        </div>
-      </button>
+      <Link to={'/create-listing'}>
+        <button type='button' className='border border-purple-500 ml-4 transition ease-linear duration-200 hover:border-white hover:bg-gradient-to-r hover:from-purple-400 hover:from-2% hover:to-indigo-500 text-purple-700 hover:text-white rounded-3xl px-4 py-2 mt-3'>
+          <div className='flex items-center gap-1'>
+            <MdOutlinePlaylistAdd  className='text-lg'/>
+            Create Listing
+          </div>
+        </button>
+      </Link>
       <hr className='mt-4 mb-2 '/>
       <DeleteConfirm showPopUp={confirmDelete} initiateDelete={handleDeleteUser} handleCancel={() => setConfirmDelete(false)}/>
       <span onClick={() => setConfirmDelete(true)} className='text-sm flex items-center justify-center text-red-600 hover:underline hover:decoration-1 hover:underline-offset-4 cursor-pointer'>

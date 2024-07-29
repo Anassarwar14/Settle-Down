@@ -14,6 +14,18 @@ const listingSchema = mongoose.Schema(
             type: String,
             required: true,
         },
+        city: {
+            type: String,
+            required: true,
+        },
+        state: {
+            type: String,
+            required: true,
+        },
+        country: {
+            type: String,
+            required: true,
+        },
         regularPrice: {
             type: Number,
             required: true,
@@ -25,18 +37,22 @@ const listingSchema = mongoose.Schema(
         bathrooms: {
             type: Number,
             required: true,
+            default: 1,
         },
         bedrooms: {
             type: Number,
             required: true,
+            default: 1,
         },
         furnished: {
             type: Boolean,
             required: true,
+            default: false,
         },
         parking: {
             type: Boolean,
             required: true,
+            default: false,
         },
         type: {
             type: String,
@@ -45,6 +61,7 @@ const listingSchema = mongoose.Schema(
         offer: {
             type: Boolean,
             required: true,
+            default: false,
         },
         imageURLs: {
             type: Array,

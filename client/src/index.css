@@ -7,6 +7,15 @@ body{
     background-color: #f3faf8bb;
 }
 
+.border-noneImp{
+    border: none !important;
+}
+
+.smooth_rendering{
+    overflow-clip-margin: unset;
+    image-rendering:optimizeSpeed;
+    image-rendering:optimizeQuality;
+} 
 .animated-background {
     background-size: 400%;
 
