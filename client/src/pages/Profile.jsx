@@ -254,7 +254,7 @@ function Profile() {
                 <p className='text-sm sm:text-base truncate'>{listing.name}</p>
                 <p className='text-xs truncate text-zinc-400 '>{listing.city}, {listing.country}</p>
               </Link>
-              <span className='sm:w-32 sm:flex sm:justify-center '><RiDeleteBin4Line onClick={() => setConfirmDeleteListing(listing._id)} className='hover:bg-red-400 sm:text-3xl text-purple-800 hover:text-red-600 hover:bg-opacity-50 rounded-full p-[0.1rem] sm:p-[0.46rem] cursor-pointer'/></span>
+              <span className='sm:w-32 sm:flex sm:justify-center items-center gap-2 text-purple-800  *:sm:text-3xl *:rounded-full *:p-[0.1rem] *:sm:p-[0.46rem] *:cursor-pointer *:shadow-md'><MdOutlineModeEditOutline className='hover:bg-purple-300 hover:bg-opacity-50' /><RiDeleteBin4Line onClick={() => setConfirmDeleteListing(listing._id)} className='hover:text-red-600 hover:bg-red-400 hover:bg-opacity-50'/></span>
             </div>
             ))
           }
