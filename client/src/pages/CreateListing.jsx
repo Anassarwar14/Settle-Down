@@ -14,6 +14,7 @@ import { HiOutlineArrowLeft} from "react-icons/hi2";
 import { RiImageAddLine } from "react-icons/ri";
 import { FaCheck } from "react-icons/fa6";
 import { RxCross2 } from "react-icons/rx";
+import { MdError, MdUpload } from 'react-icons/md';
 
 const CreateListing = () => {
   const navigate = useNavigate();
@@ -188,6 +189,14 @@ const CreateListing = () => {
   function toggleRent (e) {
     setIsRent(!isRent);
   }
+
+  function scrollToTop() {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+  }
+
   return (
     <main className='sm:py-5 sm:px-10 mx-auto'>
       <form onSubmit={handleSubmit} className='grid grid-cols-1 sm:grid-cols-5 sm:gap-6 '>
@@ -204,9 +213,9 @@ const CreateListing = () => {
             </button>
           </div>
           <h3 className='text-lg text-zinc-900 font-medium'>Property Information</h3>
-          {error && <p className='text-sm text-red-600' >{error}</p>}
+          {error && <span className='text-sm text-red-600 flex items-center gap-1'><MdError /><p>{error}</p></span>}
           <label htmlFor="name">Property Name</label>
-          <input required onChange={handleChange} id="name" className='w-full text-zinc-700 rounded-md border shadow-sm p-2 bg-gray-50 focus:outline-none' />
+          <input required onChange={handleChange} id="name" maxLength={100} className='w-full text-zinc-700 rounded-md border shadow-sm p-2 bg-gray-50 focus:outline-none' />
           <article className='grid grid-cols-2 gap-4'>
             <label>Country</label>
             <label>State</label>
@@ -217,7 +226,6 @@ const CreateListing = () => {
                 setCountryid(e.id);
                 handleLocChange("country", e.name);
               }}
-              onTextChange={(e) => handleChange(e)}
               placeHolder="Select Country"
               inputClassName='bg-gray-50 border-noneImp focus:outline-none text-zinc-700'
               containerClassName='bg-gray-50 *:border-0 border rounded-md shadow-sm'
@@ -324,6 +332,7 @@ const CreateListing = () => {
                 onChange={(e) => { 
                   setFiles(e.target.files); 
                   Array.from(e.target.files).map(file => setFileNames((prev) => [...prev, file.name]));
+                  setImageUploadError(false);
                 }}
                 type='file'
                 ref={fileRef}
@@ -349,11 +358,12 @@ const CreateListing = () => {
                     ))}
                 </div>
               }
-            {imageUploadError && <p className='text-red-600 text-sm'>{imageUploadError}</p>}
+              {imageUploadError && <span className='text-xs text-red-600 flex items-center gap-1'><MdError />{imageUploadError}</span>}
             <button type='button' disabled={uploading} hidden={!showButton} onClick={handleImageSubmit} className='text-sm enabled:hover:bg-emerald-100 border border-emerald-600 border-opacity-20 hover:opacity-70 shadow-teal-600 text-teal-600 p-1 rounded-2xl disabled:animate-pulse'>{uploading ? 'Uploading...' : 'Upload'}</button>
             <h2 className='text-lg text-zinc-900 font-medium'>Property Description</h2>
-            <textarea required onChange={handleChange} name="description" id="description" placeholder='Highlight the main selling points...' className='caret-teal-500 focus:outline-teal-500 min-h-36 border shadow-sm rounded-lg bg-gray-50 p-3 text-zinc-700'></textarea>
+            <textarea required value={formData.description} onChange={handleChange} name="description" id="description" placeholder='Highlight the main selling points...' className='caret-teal-500 focus:outline-teal-500 min-h-36 border shadow-sm rounded-lg bg-gray-50 p-3 text-zinc-700'></textarea>
           </section>
+          <button type='button' onClick={scrollToTop} className='w-full mt-4 rounded-full text-fuchsia-800 border border-purple-400 hover:bg-purple-400 transition ease-in-out duration-300 flex items-center justify-center gap-2 p-2'><MdUpload className='text-fuchsia-700'/>Next</button>
         </aside>
       </form>
     </main>
