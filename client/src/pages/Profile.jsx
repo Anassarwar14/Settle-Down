@@ -30,6 +30,8 @@ function Profile() {
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [listings, setListings] = useState([]);
   const [showListingsError, setShowListingsError] = useState(false);
+  const [listingsDelError, setListingsDelError] = useState(false);
+  const [confirmDeleteListing, setConfirmDeleteListing] = useState(false);
   const fileRef = useRef(null);
 
   useEffect(() => {
@@ -138,6 +140,25 @@ function Profile() {
     }
   }
 
+  async function handleDeleteListing (listingId) {
+    try {
+      setListingsDelError(false);
+      const res = await fetch(`/api/listing/delete/${listingId}`, 
+        {
+          method: 'DELETE',
+        });
+      const data = await res.json(); 
+      if(data.success === false) {
+        setListingsDelError(data.message);
+        return;
+      }
+      setConfirmDeleteListing(false);
+      setListings((prev) => prev.filter((listing) => listing._id !== listingId));
+    } catch (error) {
+      setListingsDelError(error.message);
+    }
+  }
+
   async function handleSignOut () {
     try {
       dispatch(signOutStart());
@@ -221,20 +242,23 @@ function Profile() {
       <div className='mt-6 rounded-lg border p-5'>  
         <h2 className='ml-2 text-zinc-700'>Listings</h2>
       </div>
+      {listingsDelError && <p className='text-xs text-red-600 ml-8 mt-2'>{listingsDelError}error</p>}
       {listings && listings.length > 0 && 
-        <div className='divide-y max-w-5xl mx-auto p-4 mt-4 border rounded-lg animated-background bg-gradient-to-r from-teal-100 via-emerald-100 to-fuchsia-300'> 
+        <div className='divide-y max-w-5xl mx-auto p-4 mt-4  border rounded-lg animated-background bg-gradient-to-r from-teal-100 via-emerald-100 to-fuchsia-300'> 
           {listings.map((listing) => (
             <div key={listing._id} className='flex items-center justify-between text-emerald-600 hover:text-cyan-500 hover:scale-105 transition ease-in-out duration-200 rounded-lg hover:bg-gradient-to-r from-teal-100 via-emerald-100 to-emerald-50'>
               <Link to={`/listing/${listing._id}`}>
-                <img src={listing.imageURLs[0]} alt='listing-cover' className='w-20 h-16 my-2 sm:w-32 sm:h-20 object-contain rounded-xl smooth_rendering'/>
+                <img src={listing.imageURLs[0]} alt='listing-cover' className='w-20 h-16 my-2 sm:w-32 sm:h-20 object-contain rounded-xl smooth_rendering bg-gray-50'/>
               </Link>
-              <Link to={`/listing/${listing._id}`}>
+              <Link to={`/listing/${listing._id}`} className='flex-1 text-center'>
                 <p className='text-sm sm:text-base truncate'>{listing.name}</p>
+                <p className='text-xs truncate text-zinc-400 '>{listing.city}, {listing.country}</p>
               </Link>
-              <span className='sm:w-32 sm:flex sm:justify-center '><RiDeleteBin4Line className='hover:bg-red-400 sm:text-2xl text-purple-800 hover:text-red-600 hover:bg-opacity-50 rounded-full p-[0.1rem] sm:p-1 cursor-pointer'/></span>
+              <span className='sm:w-32 sm:flex sm:justify-center '><RiDeleteBin4Line onClick={() => setConfirmDeleteListing(listing._id)} className='hover:bg-red-400 sm:text-3xl text-purple-800 hover:text-red-600 hover:bg-opacity-50 rounded-full p-[0.1rem] sm:p-[0.46rem] cursor-pointer'/></span>
             </div>
             ))
           }
+          <DeleteConfirm showPopUp={confirmDeleteListing} initiateDelete={() => handleDeleteListing(confirmDeleteListing)} handleCancel={() => setConfirmDeleteListing(false)} textDel={"Are you sure you want to delete this listing?"} titleDel={"Listing"}/>
         </div>
       }
       {showListingsError && <p className='text-red-600 text-xs ml-2 mt-2'>Error Loading Listings!</p>}
@@ -247,7 +271,7 @@ function Profile() {
         </button>
       </Link>
       <hr className='mt-4 mb-2 '/>
-      <DeleteConfirm showPopUp={confirmDelete} initiateDelete={handleDeleteUser} handleCancel={() => setConfirmDelete(false)}/>
+      <DeleteConfirm showPopUp={confirmDelete} initiateDelete={handleDeleteUser} handleCancel={() => setConfirmDelete(false)} textDel={"Are you sure you want to deactivate your account?"} titleDel={"Account"}/>
       <span onClick={() => setConfirmDelete(true)} className='text-sm flex items-center justify-center text-red-600 hover:underline hover:decoration-1 hover:underline-offset-4 cursor-pointer'>
         Delete Account
       </span>
