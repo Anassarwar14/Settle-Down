@@ -4,9 +4,10 @@ import { Link } from 'react-router-dom';
 import { updateUserStart, updateUserSuccess, updateUserFailure, resetError, deleteUserStart, deleteUserSuccess, deleteUserFailure, signOutStart, signOutSuccess, signOutFailure } from '../redux/user/userSlice';
 import { app } from '../firebase';
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage'
-import { MdOutlineModeEditOutline, MdOutlinePlaylistAdd, MdErrorOutline} from "react-icons/md";
+import { MdOutlineModeEditOutline, MdOutlinePlaylistAdd, MdErrorOutline, MdOutlineDeleteOutline} from "react-icons/md";
 import { PiSignOut, PiSpinner } from "react-icons/pi";
 import { HiCheckBadge } from "react-icons/hi2";
+import { RiDeleteBin4Line } from "react-icons/ri";
 import DeleteConfirm from '../components/DeleteConfirm';
 
 
@@ -27,6 +28,8 @@ function Profile() {
   const [updateSuccess, setUpdateSuccess] = useState(false);
   const [noChange, setNoChange] = useState(true);
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [listings, setListings] = useState([]);
+  const [showListingsError, setShowListingsError] = useState(false);
   const fileRef = useRef(null);
 
   useEffect(() => {
@@ -35,6 +38,11 @@ function Profile() {
     }
   }, [file])
   
+  useEffect(() => {
+    ShowListings();
+  }, [])
+  
+
 
   function handleFileUpload (file) {
     const storage = getStorage(app);
@@ -69,6 +77,20 @@ function Profile() {
     setNoChange(false);
   }
   
+  async function ShowListings () {
+    try {
+      setShowListingsError(false);
+      const res = await fetch(`/api/user/listing/${currentUser._id}`);
+      const data = await res.json();
+      if (data.success === false) {
+        setShowListingsError(true);
+      }
+      setListings(data);
+    } catch (error) {
+      setShowListingsError(true);
+    }
+  }
+
   async function handleSubmit (e) {
     e.preventDefault();
     setFilePerc(0);
@@ -155,11 +177,11 @@ function Profile() {
           <button className='flex items-center text-sm font-light gap-1 text-zinc-500 bg-gray-100 border shadow-md rounded-full px-4 py-1 hover:animate-pulse' onClick={toggleEdit}>Edit<MdOutlineModeEditOutline /></button>
         </div>
       </div>
-      <div className={`grid grid-cols-2 justify-items-center mt-5 mb-5 gap-3 sm:gap-1 ${editMode && 'hidden'}`}>
+      <div className={`grid grid-cols-2 justify-items-center mt-1 sm:mt-5 mb-5 gap-3 sm:gap-1 ${editMode && 'hidden'}`}>
         <h3 className='mt-4 text-md sm:text-lg text-zinc-400'>Username</h3>
         <h3 className='mt-4 text-md sm:text-lg text-zinc-400'>Email Address</h3>
-        <h3 className='text-zinc-700 text-sm sm:text-md'>{currentUser.username}</h3>
-        <h3 className='text-zinc-700 text-sm sm:text-md'>{currentUser.email}</h3>
+        <h3 className='text-zinc-700 text-xs sm:text-md'>{currentUser.username}</h3>
+        <h3 className='text-zinc-700 text-xs sm:text-md'>{currentUser.email}</h3>
       </div>
 
       <form className={`flex flex-col gap-4 mt-5 px-4 ${!editMode && 'hidden'}`} onSubmit={ handleSubmit }>
@@ -199,10 +221,27 @@ function Profile() {
       <div className='mt-6 rounded-lg border p-5'>  
         <h2 className='ml-2 text-zinc-700'>Listings</h2>
       </div>
+      {listings && listings.length > 0 && 
+        <div className='divide-y max-w-5xl mx-auto p-4 mt-4 border rounded-lg animated-background bg-gradient-to-r from-teal-100 via-emerald-100 to-fuchsia-300'> 
+          {listings.map((listing) => (
+            <div key={listing._id} className='flex items-center justify-between text-emerald-600 hover:text-cyan-500 hover:scale-105 transition ease-in-out duration-200 rounded-lg hover:bg-gradient-to-r from-teal-100 via-emerald-100 to-emerald-50'>
+              <Link to={`/listing/${listing._id}`}>
+                <img src={listing.imageURLs[0]} alt='listing-cover' className='w-20 h-16 my-2 sm:w-32 sm:h-20 object-contain rounded-xl smooth_rendering'/>
+              </Link>
+              <Link to={`/listing/${listing._id}`}>
+                <p className='text-sm sm:text-base truncate'>{listing.name}</p>
+              </Link>
+              <span className='sm:w-32 sm:flex sm:justify-center '><RiDeleteBin4Line className='hover:bg-red-400 sm:text-2xl text-purple-800 hover:text-red-600 hover:bg-opacity-50 rounded-full p-[0.1rem] sm:p-1 cursor-pointer'/></span>
+            </div>
+            ))
+          }
+        </div>
+      }
+      {showListingsError && <p className='text-red-600 text-xs ml-2 mt-2'>Error Loading Listings!</p>}
       <Link to={'/create-listing'}>
-        <button type='button' className='border border-purple-500 ml-4 transition ease-linear duration-200 hover:border-white hover:bg-gradient-to-r hover:from-purple-400 hover:from-2% hover:to-indigo-500 text-purple-700 hover:text-white rounded-3xl px-4 py-2 mt-3'>
+        <button type='button' className='text-sm sm:text-base border border-purple-500 sm:ml-7 transition ease-linear duration-200 hover:border-white hover:bg-gradient-to-r hover:from-purple-400 hover:from-2% hover:to-indigo-500 text-purple-700 hover:text-white rounded-3xl px-4 py-2 mt-3'>
           <div className='flex items-center gap-1'>
-            <MdOutlinePlaylistAdd  className='text-lg'/>
+            <MdOutlinePlaylistAdd  className='sm:text-lg'/>
             Create Listing
           </div>
         </button>
