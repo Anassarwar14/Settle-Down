@@ -30,7 +30,7 @@ function Header() {
 
 
   return (
-    <div ref={headerRef} className='bg-slate-200 shadow-md sticky top-0 left-0 right-0 translate-y-0 transition ease-in-out duration-300 z-50'>
+    <div ref={headerRef} className='bg-slate-200 shadow-md sticky top-0 left-0 right-0 translate-y-0 transition ease-in-out duration-300 z-50 bg-opacity-60 backdrop-blur-lg'>
       <header className='flex items-center justify-between px-3 py-2 max-w-6xl mx-auto'>
         <Link to="/" >
           <h1 className='flex flex-wrap items-baseline sm:items-end'>

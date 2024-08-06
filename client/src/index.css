@@ -7,6 +7,10 @@ body{
     background-color: #f3faf8bb;
 }
 
+::selection {
+    color: blueviolet;
+}
+
 .border-noneImp{
     border: none !important;
 }
@@ -16,6 +20,7 @@ body{
     image-rendering:optimizeSpeed;
     image-rendering:optimizeQuality;
 } 
+
 .animated-background {
     background-size: 400%;
 
