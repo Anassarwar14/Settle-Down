@@ -17,15 +17,20 @@ import SwiperCore from 'swiper';
 import { Keyboard, Navigation, Pagination } from 'swiper/modules';
 import 'swiper/css/bundle';
 import SocialShare from '../components/SocialShare';
-
+import ContactLandlord from '../components/ContactLandlord';
+import { useSelector } from 'react-redux';
 
 const Listing = () => {
     SwiperCore.use([Navigation, Keyboard, Pagination]);
     const params = useParams();
+    const { currentUser } = useSelector((state) => state.user);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
     const [listing, setListing] = useState(null);
     const [share, setShare] = useState(false);
+    const [contact, setContact] = useState(false);
+    const [landlord, setLandlord] = useState(null);
+
 
     useEffect(() => {
         const fetchListing = async () => {
@@ -47,8 +52,22 @@ const Listing = () => {
                 setLoading(false);
             }
         }
+
         fetchListing();
-    }, [params.listingId])
+        const fetchLandlord = async () => {
+            try {
+                const res = await fetch(`/api/user/${listing.userRef}`);
+                const data = await res.json();
+                if(data.success === false){
+                    return;
+                }
+                setLandlord(data);
+            } catch (error) {
+                console.log(error);
+            }
+          }
+          fetchLandlord();
+    }, [params.listingId, listing && listing.userRef])
     
 
     return (
@@ -77,7 +96,7 @@ const Listing = () => {
                         <div className='w-[56rem] flex flex-col gap-2'>
                             <div className='flex max-sm:flex-col max-sm:gap-3 items-start sm:justify-between sm:gap-x-20 flex-wrap'>
                                 <h1 className='text-4xl sm:text-5xl text-zinc-800 font-bold'>{listing.name}</h1>    
-                                <h2 className='min-w-6xl text-4xl text-zinc-800 font-bold border rounded-lg p-2 bg-gradient-to-r from-emerald-200 to-slate-100 '>${listing.regularPrice} {listing.type === 'rent' && '/mo'}</h2>
+                                <h2 className='min-w-6xl text-4xl text-zinc-800 font-bold border rounded-lg p-2 bg-gradient-to-r from-emerald-200 to-slate-100 '>{listing.regularPrice.toLocaleString('en-US', { style: 'currency', currency: 'USD' })} {listing.type === 'rent' && '/mo'}</h2>
                                 <p className='before:content-[""] before:absolute before:w-1 before:h-1 before:top-3 before:left-[0.5rem] before:rounded-full relative before:bg-fuchsia-600 capitalize rounded-lg pl-5 px-3 py-[0.1rem] bg-teal-600 bg-opacity-80 text-gray-50 font-light'>For {listing.type === 'sell' ? 'Sale' : listing.type}</p>
                             </div>
                             <div className='flex items-center gap-5'>
@@ -101,7 +120,7 @@ const Listing = () => {
                         </div>
                         <aside className='flex-1 max-w-80 flex flex-col gap-2 p-4 shadow-xl border border-gray-200 bg-slate-50 rounded-2xl h-max'>
                             <h4>Brief Information</h4>
-                            <h2><span className='font-semibold text-md'>Owner</span>: {listing.userRef}</h2>
+                            <h2><span className='font-semibold text-md'>Owner</span>: {landlord && landlord.username}</h2>
                             <div className='mt-4 flex justify justify-around items-center border bg-gray-100 rounded-lg p-1 *:flex *:items-center *:gap-2 *:text-sm *:font-semibold'>
                                 <p><PiBedThin className='text-xl' />{listing.bedrooms}</p>
                                 <p><PiBathtubLight className='text-xl'/>{listing.bathrooms}</p>
@@ -111,18 +130,21 @@ const Listing = () => {
                             {listing.offer && 
                                 <div>
                                     <h2 className='before:content-[""] before:absolute before:w-[0.33rem] before:h-[0.33rem] before:top-[0.6rem] before:left-[0.5rem] before:rounded-full relative before:bg-fuchsia-600 pl-5 mt-4'>Discount Available</h2>
-                                    <h3 className='ml-5 text-sm text-zinc-500'>Estimated: ${+listing.regularPrice - +listing.discountPrice}{listing.type === 'rent' && ' /mo'}</h3>
+                                    <h3 className='ml-5 text-sm text-zinc-500'>Estimated: {(+listing.regularPrice - +listing.discountPrice).toLocaleString('en-US', { style: 'currency', currency: 'USD' })}{listing.type === 'rent' && ' /mo'}</h3>
                                 </div>
                             }
                             <div className='flex items-stretch gap-1 mt-4'>
-                                <button className='w-[90%] p-2 rounded-xl bg-zinc-950 font-light tracking-wide text-white'>Show Contacts</button>
+                                {currentUser && listing.userRef !== currentUser._id && !contact && 
+                                    <button onClick={() => setContact(true)} className='w-[90%] p-2 rounded-xl bg-zinc-950 font-light tracking-wide text-white'>Show Contacts</button>
+                                }
                                 <button onClick={() => setShare(!share)} className='border px-[0.6rem] rounded-xl border-zinc-950 hover:text-white hover:bg-zinc-950 transition ease duration-200'><IoIosShareAlt className='text-lg' /></button>
                             </div>
                         </aside>
                     </section>
                 </div>
             )}
-            {share && <button onClick={() => setShare(false)}><SocialShare url={`/api/listing/${params.listingId}`} title={listing.name} /></button>}
+            {share && <button onClick={() => setTimeout(() => setShare(false), 700) } className='cursor-default'><SocialShare share={setShare} url={`/listing/${params.listingId}`} title={listing.name} /></button>}
+            {contact && <ContactLandlord contact={setContact} landlord={landlord} listing={listing}/>}
         </main>
     )
 }
