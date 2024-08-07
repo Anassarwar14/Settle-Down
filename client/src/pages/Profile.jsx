@@ -201,8 +201,8 @@ function Profile() {
       <div className={`grid grid-cols-2 justify-items-center mt-1 sm:mt-5 mb-5 gap-3 sm:gap-1 ${editMode && 'hidden'}`}>
         <h3 className='mt-4 text-md sm:text-lg text-zinc-400'>Username</h3>
         <h3 className='mt-4 text-md sm:text-lg text-zinc-400'>Email Address</h3>
-        <h3 className='text-zinc-700 text-xs sm:text-md'>{currentUser.username}</h3>
-        <h3 className='text-zinc-700 text-xs sm:text-md'>{currentUser.email}</h3>
+        <h3 className='text-zinc-700 max-sm:text-xs sm:text-sm'>{currentUser.username}</h3>
+        <h3 className='text-zinc-700 max-sm:text-xs sm:text-sm'>{currentUser.email}</h3>
       </div>
 
       <form className={`flex flex-col gap-4 mt-5 px-4 ${!editMode && 'hidden'}`} onSubmit={ handleSubmit }>
