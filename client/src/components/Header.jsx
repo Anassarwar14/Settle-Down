@@ -1,10 +1,12 @@
-import React, { useEffect, useRef } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useEffect, useRef, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import { IoSearchOutline } from "react-icons/io5";
 import { useSelector } from 'react-redux';
 
 function Header() {
+  const navigate = useNavigate();
   const { currentUser } = useSelector((state) => state.user);
+  const [searchTerm, setSearchTerm] = useState('');
   const headerRef = useRef(null);
 
   useEffect(() => {
@@ -28,6 +30,23 @@ function Header() {
     }
   }, []);
 
+  useEffect(() => {
+    const urlParams = new URLSearchParams(location.search);
+    const searchTermFromUrl = urlParams.get('searchTerm');
+    if(searchTermFromUrl){
+      setSearchTerm(searchTermFromUrl);
+    } 
+
+  }, [location.search]);
+  
+
+  function handleSubmit (e) {
+    e.preventDefault();
+    const urlParams = new URLSearchParams(window.location.search);
+    urlParams.set('searchTerm', searchTerm);
+    const searchQuery = urlParams.toString();
+    navigate(`search?${searchQuery}`); 
+  }
 
   return (
     <div ref={headerRef} className='bg-slate-200 shadow-md sticky top-0 left-0 right-0 translate-y-0 transition ease-in-out duration-300 z-50 bg-opacity-60 backdrop-blur-lg'>
@@ -38,8 +57,8 @@ function Header() {
             <span className='text-md sm:text-3xl font-[200] text-teal-800'>Down<span className='text-2xl font-[350] sm:text-5xl text-fuchsia-600'>.</span></span>
           </h1>
         </Link>
-        <form className='flex items-center bg-slate-100 rounded-lg px-3 py-2 sm:-ml-10'>
-          <input type='text' placeholder='Search..' className='bg-transparent focus:outline-none font-[300] w-24 sm:w-60 text-sm sm:text-md' />
+        <form onSubmit={handleSubmit} className='flex items-center bg-slate-100 rounded-lg px-3 py-2 sm:-ml-10'>
+          <input value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} type='text' placeholder='Search..' className='bg-transparent focus:outline-none font-[300] w-24 sm:w-60 text-sm sm:text-md' />
           <button type='submit'><IoSearchOutline /></button>
         </form>
         <ul className='flex items-center space-x-7 font-[300] text-md text-slate-600'>
