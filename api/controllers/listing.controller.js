@@ -83,6 +83,9 @@ export const getListings = async (req, res, next) => {
 
         const listings = await Listing.find({
             name: {$regex: searchTerm, $options: 'i'},
+            city: {$regex: searchTerm, $options: 'i'},
+            state: {$regex: searchTerm, $options: 'i'},
+            country: {$regex: searchTerm, $options: 'i'},
             offer,
             furnished,
             parking,
