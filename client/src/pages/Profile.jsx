@@ -242,7 +242,7 @@ function Profile() {
       <div className='mt-6 rounded-lg border p-5'>  
         <h2 className='ml-2 text-zinc-700'>Listings</h2>
       </div>
-      {listingsDelError && <p className='text-xs text-red-600 ml-8 mt-2'>{listingsDelError}error</p>}
+      {listingsDelError && <p className='text-xs text-red-600 ml-8 mt-2'>{listingsDelError}</p>}
       {listings && listings.length > 0 && 
         <div className='divide-y max-w-5xl mx-auto p-4 mt-4  border rounded-lg animated-background bg-gradient-to-r from-teal-100 via-emerald-100 to-fuchsia-300'> 
           {listings.map((listing) => (

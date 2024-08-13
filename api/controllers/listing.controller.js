@@ -54,7 +54,7 @@ export const getListing = async (req, res, next) => {
 
 export const getListings = async (req, res, next) => {
     try {
-        const limit = parseInt(req.query.limit) || 9;
+        const limit = parseInt(req.query.limit) || 12;
         const startIndex = parseInt(req.query.startIndex) || 0;
         
         let offer = req.query.offer;
@@ -77,10 +77,19 @@ export const getListings = async (req, res, next) => {
             type = { $in:['sell', 'rent'] };
         }
 
-        const searchTerm = req.query.searchTerm || '';
-        const sort = req.query.sort || 'createdAt';
-        const order = req.query.order || 'desc';
+        let bedrooms = parseInt(req.query.bedrooms);
+        if (isNaN(bedrooms)) {
+            bedrooms = { $in:[1, 2, 3, 4, 5] };
+        }
+        let bathrooms = parseInt(req.query.bathrooms);
+        if (isNaN(bathrooms)) {
+            bathrooms = { $in:[1, 2, 3, 4, 5] };
+        }
 
+        const searchTerm = req.query.searchTerm || '';
+        const sort = req.query.sort || 'desc';
+        const order = req.query.order || 'desc';
+        const maxPrice = parseInt(req.query.price) || Infinity;
         const listings = await Listing.find({
             name: {$regex: searchTerm, $options: 'i'},
             city: {$regex: searchTerm, $options: 'i'},
@@ -89,9 +98,15 @@ export const getListings = async (req, res, next) => {
             offer,
             furnished,
             parking,
-            type, 
-        }).sort(
-            {[sort]: order}
+            bedrooms,
+            bathrooms,
+            type,
+            regularPrice:  { $lte: maxPrice }
+        })
+        .sort(
+            {'regularPrice': order}
+        ).sort(
+            {'createdAt': sort}
         ).limit(limit).skip(startIndex);
 
         return res.status(200).json(listings);

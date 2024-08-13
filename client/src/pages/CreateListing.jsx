@@ -67,7 +67,7 @@ const CreateListing = () => {
     e.preventDefault();
     try {
       if (formData.imageURLs.length < 1) return setError('Atleast 1 image must be uploaded!');
-      if (formData.regularPrice <= formData.discountPrice && formData.offer) return setError('Discount Price should be less than Regular Price!');
+      if (+formData.regularPrice <= +formData.discountPrice && formData.offer) return setError('Discount Price should be less than Regular Price!');
       setLoading(true);
       setError(false);
       const res = await fetch('/api/listing/create-listing', 

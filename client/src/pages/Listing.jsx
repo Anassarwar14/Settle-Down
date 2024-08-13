@@ -1,16 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { MdError, MdFolderShared, MdIosShare, MdOutlineRoom, MdShare, MdShareLocation } from 'react-icons/md';
+import { MdError, MdOutlineModeEditOutline } from 'react-icons/md';
 import { IoLocationOutline } from "react-icons/io5";
-import { IoIosAirplane, IoIosArrowRoundBack, IoIosShareAlt } from "react-icons/io";
+import { IoIosArrowRoundBack, IoIosShareAlt } from "react-icons/io";
 import { IoCameraOutline } from "react-icons/io5";
-import { LiaBedSolid } from "react-icons/lia";
-import { PiArmchairThin, PiBathtubLight, PiBedThin, PiCarSimpleThin, PiCheckThin, PiCrossThin, PiPicnicTableLight, PiPicnicTableThin, PiSmileySadThin } from "react-icons/pi";
-import { GiCarDoor } from "react-icons/gi";
-import { TbCarGarage } from "react-icons/tb";
-import { PiCarThin } from "react-icons/pi";
+import { PiArmchairThin, PiBathtubLight, PiBedThin, PiCarSimpleThin, PiCheckThin } from "react-icons/pi";
 import { FcCancel } from "react-icons/fc";
 import { PiCityLight } from "react-icons/pi";
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import LoadingSkeleton from '../components/LoadingSkeleton';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import SwiperCore from 'swiper';
@@ -19,10 +15,13 @@ import 'swiper/css/bundle';
 import SocialShare from '../components/SocialShare';
 import ContactLandlord from '../components/ContactLandlord';
 import { useSelector } from 'react-redux';
+import { RiDeleteBin4Line } from 'react-icons/ri';
+import DeleteConfirm from '../components/DeleteConfirm';
 
 const Listing = () => {
     SwiperCore.use([Navigation, Keyboard, Pagination]);
     const params = useParams();
+    const navigate = useNavigate();
     const { currentUser } = useSelector((state) => state.user);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
@@ -30,6 +29,8 @@ const Listing = () => {
     const [share, setShare] = useState(false);
     const [contact, setContact] = useState(false);
     const [landlord, setLandlord] = useState(null);
+    const [confirmDeleteListing, setConfirmDeleteListing] = useState(false);
+    const [listingsDelError, setListingsDelError] = useState(false);
 
 
     useEffect(() => {
@@ -69,6 +70,24 @@ const Listing = () => {
           fetchLandlord();
     }, [params.listingId, listing && listing.userRef])
     
+    async function handleDeleteListing (listingId) {
+        try {
+          setListingsDelError(false);
+          const res = await fetch(`/api/listing/delete/${listingId}`, 
+            {
+              method: 'DELETE',
+            });
+          const data = await res.json(); 
+          if(data.success === false) {
+            setListingsDelError(data.message);
+            return;
+          }
+          setConfirmDeleteListing(false);
+          navigate('/profile');
+        } catch (error) {
+          setListingsDelError(error.message);
+        }
+      }
 
     return (
         <main>
@@ -118,26 +137,36 @@ const Listing = () => {
                                 <p>{listing.parking ? <PiCheckThin className='text-teal-600'/> : <FcCancel className='text-teal-600'/>} Parking</p>
                             </div>
                         </div>
-                        <aside className='flex-1 max-w-80 flex flex-col gap-2 p-4 shadow-xl border border-gray-200 bg-slate-50 rounded-2xl h-max'>
-                            <h4>Brief Information</h4>
-                            <h2 className='capitalize'><span className='font-semibold text-md'>Owner</span>: {landlord && landlord.username}</h2>
-                            <div className='mt-4 flex justify justify-around items-center border bg-gray-100 rounded-lg p-1 *:flex *:items-center *:gap-2 *:text-sm *:font-semibold'>
-                                <p><PiBedThin className='text-xl' />{listing.bedrooms}</p>
-                                <p><PiBathtubLight className='text-xl'/>{listing.bathrooms}</p>
-                                <p><PiCarSimpleThin className='text-xl'/>{listing.parking ? '1' : '0'}</p>
-                                <p><PiArmchairThin className='text-xl'/>{listing.furnished ? 'Yes' : 'No'}</p>
-                            </div>
-                            {listing.offer && 
-                                <div>
-                                    <h2 className='before:content-[""] before:absolute before:w-[0.33rem] before:h-[0.33rem] before:top-[0.6rem] before:left-[0.5rem] before:rounded-full relative before:bg-fuchsia-600 pl-5 mt-4'>Discount Available</h2>
-                                    <h3 className='ml-5 text-sm text-zinc-500'>Estimated: {(+listing.regularPrice - +listing.discountPrice).toLocaleString('en-US', { style: 'currency', currency: 'USD' })}{listing.type === 'rent' && ' /mo'}</h3>
+                        <aside className='flex-1 flex flex-col gap-2'>
+                            {listingsDelError && <p className='text-xs text-red-600 ml-8 mt-2'>{listingsDelError}</p>}
+                            <span className='sm:w-32 flex sm:items-center gap-2 text-purple-800 '>
+                                <Link to={`/update-listing/${listing._id}`}>
+                                    <MdOutlineModeEditOutline className='hover:bg-purple-300 hover:bg-opacity-50 sm:text-3xl rounded-full p-[0.1rem] sm:p-[0.46rem] cursor-pointer shadow-md' />
+                                </Link>
+                                <RiDeleteBin4Line onClick={() => setConfirmDeleteListing(listing._id)} className='hover:text-red-600 hover:bg-red-400 hover:bg-opacity-50 sm:text-3xl rounded-full p-[0.1rem] sm:p-[0.46rem] cursor-pointer shadow-md'/>
+                            </span>
+                            <DeleteConfirm showPopUp={confirmDeleteListing} initiateDelete={() => handleDeleteListing(confirmDeleteListing)} handleCancel={() => setConfirmDeleteListing(false)} textDel={"Are you sure you want to delete this listing?"} titleDel={"Listing"}/>
+                            <div className='max-w-80 flex flex-col gap-2 p-4 shadow-xl border border-gray-200 bg-slate-50 rounded-2xl h-max'>
+                                <h4>Brief Information</h4>
+                                <h2 className='capitalize'><span className='font-semibold text-md'>Owner</span>: {landlord && landlord.username}</h2>
+                                <div className='mt-4 flex justify justify-around items-center border bg-gray-100 rounded-lg p-1 *:flex *:items-center *:gap-2 *:text-sm *:font-semibold'>
+                                    <p><PiBedThin className='text-xl' />{listing.bedrooms}</p>
+                                    <p><PiBathtubLight className='text-xl'/>{listing.bathrooms}</p>
+                                    <p><PiCarSimpleThin className='text-xl'/>{listing.parking ? '1' : '0'}</p>
+                                    <p><PiArmchairThin className='text-xl'/>{listing.furnished ? 'Yes' : 'No'}</p>
                                 </div>
-                            }
-                            <div className='flex items-stretch gap-1 mt-4'>
-                                {currentUser && listing.userRef !== currentUser._id && !contact && 
-                                    <button onClick={() => setContact(true)} className='w-[90%] p-2 rounded-xl bg-zinc-950 font-light tracking-wide text-white'>Show Contacts</button>
+                                {listing.offer && 
+                                    <div>
+                                        <h2 className='before:content-[""] before:absolute before:w-[0.33rem] before:h-[0.33rem] before:top-[0.6rem] before:left-[0.5rem] before:rounded-full relative before:bg-fuchsia-600 pl-5 mt-4'>Discount Available</h2>
+                                        <h3 className='ml-5 text-sm text-zinc-500'>Estimated: {(+listing.regularPrice - +listing.discountPrice).toLocaleString('en-US', { style: 'currency', currency: 'USD' })}{listing.type === 'rent' && ' /mo'}</h3>
+                                    </div>
                                 }
-                                <button onClick={() => setShare(!share)} className='border px-[0.6rem] rounded-xl border-zinc-950 hover:text-white hover:bg-zinc-950 transition ease duration-200'><IoIosShareAlt className='text-lg' /></button>
+                                <div className='flex items-stretch gap-1 mt-4'>
+                                    {currentUser && listing.userRef !== currentUser._id && !contact && 
+                                        <button onClick={() => setContact(true)} className='w-[90%] p-2 rounded-xl bg-zinc-950 font-light tracking-wide text-white'>Show Contacts</button>
+                                    }
+                                    <button onClick={() => setShare(!share)} className='border px-[0.6rem] rounded-xl border-zinc-950 hover:text-white hover:bg-zinc-950 transition ease duration-200'><IoIosShareAlt className='text-lg' /></button>
+                                </div>
                             </div>
                         </aside>
                     </section>
