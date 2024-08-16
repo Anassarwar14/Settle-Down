@@ -3,7 +3,7 @@ import { MdError, MdOutlineModeEditOutline } from 'react-icons/md';
 import { IoLocationOutline } from "react-icons/io5";
 import { IoIosArrowRoundBack, IoIosShareAlt } from "react-icons/io";
 import { IoCameraOutline } from "react-icons/io5";
-import { PiArmchairThin, PiBathtubLight, PiBedThin, PiCarSimpleThin, PiCheckThin } from "react-icons/pi";
+import { PiArmchairThin, PiBathtubThin, PiBedThin, PiCarSimpleThin, PiCheckThin } from "react-icons/pi";
 import { FcCancel } from "react-icons/fc";
 import { PiCityLight } from "react-icons/pi";
 import { Link, useNavigate, useParams } from 'react-router-dom'
@@ -111,7 +111,7 @@ const Listing = () => {
                             )
                         )}
                     </Swiper>
-                    <section className='flex gap-2 sm:gap-10 p-4 flex-wrap'>
+                    <section className='flex gap-2 sm:gap-8 p-4 sm:pr-0 flex-wrap'>
                         <div className='w-[56rem] flex flex-col gap-2'>
                             <div className='flex max-sm:flex-col max-sm:gap-3 items-start sm:justify-between sm:gap-x-20 flex-wrap'>
                                 <h1 className='text-4xl sm:text-5xl text-zinc-800 font-bold'>{listing.name}</h1>    
@@ -137,21 +137,21 @@ const Listing = () => {
                                 <p>{listing.parking ? <PiCheckThin className='text-teal-600'/> : <FcCancel className='text-teal-600'/>} Parking</p>
                             </div>
                         </div>
-                        <aside className='flex-1 flex flex-col gap-2'>
+                        <aside className='max-sm:mx-auto sm:flex-1 flex flex-col gap-2'>
                             {listingsDelError && <p className='text-xs text-red-600 ml-8 mt-2'>{listingsDelError}</p>}
-                            <span className='sm:w-32 flex sm:items-center gap-2 text-purple-800 '>
+                            <span className='sm:w-32 flex sm:items-center gap-2 max-sm:justify-end text-purple-800 '>
                                 <Link to={`/update-listing/${listing._id}`}>
                                     <MdOutlineModeEditOutline className='hover:bg-purple-300 hover:bg-opacity-50 sm:text-3xl rounded-full p-[0.1rem] sm:p-[0.46rem] cursor-pointer shadow-md' />
                                 </Link>
                                 <RiDeleteBin4Line onClick={() => setConfirmDeleteListing(listing._id)} className='hover:text-red-600 hover:bg-red-400 hover:bg-opacity-50 sm:text-3xl rounded-full p-[0.1rem] sm:p-[0.46rem] cursor-pointer shadow-md'/>
                             </span>
                             <DeleteConfirm showPopUp={confirmDeleteListing} initiateDelete={() => handleDeleteListing(confirmDeleteListing)} handleCancel={() => setConfirmDeleteListing(false)} textDel={"Are you sure you want to delete this listing?"} titleDel={"Listing"}/>
-                            <div className='max-w-80 flex flex-col gap-2 p-4 shadow-xl border border-gray-200 bg-slate-50 rounded-2xl h-max'>
+                            <div className='w-full flex flex-col gap-2 p-4 shadow-xl border border-gray-200 bg-slate-50 rounded-2xl h-max'>
                                 <h4>Brief Information</h4>
                                 <h2 className='capitalize'><span className='font-semibold text-md'>Owner</span>: {landlord && landlord.username}</h2>
                                 <div className='mt-4 flex justify justify-around items-center border bg-gray-100 rounded-lg p-1 *:flex *:items-center *:gap-2 *:text-sm *:font-semibold'>
                                     <p><PiBedThin className='text-xl' />{listing.bedrooms}</p>
-                                    <p><PiBathtubLight className='text-xl'/>{listing.bathrooms}</p>
+                                    <p><PiBathtubThin className='text-xl'/>{listing.bathrooms}</p>
                                     <p><PiCarSimpleThin className='text-xl'/>{listing.parking ? '1' : '0'}</p>
                                     <p><PiArmchairThin className='text-xl'/>{listing.furnished ? 'Yes' : 'No'}</p>
                                 </div>

@@ -77,6 +77,16 @@ export const getListings = async (req, res, next) => {
             type = { $in:['sell', 'rent'] };
         }
 
+        let country = req.query.country;
+        if (country === undefined || country === '') {
+            country = { $exists:true };
+        }
+
+        let city = req.query.city;
+        if (city === undefined || city === '') {
+            city = { $exists:true };
+        }
+
         let bedrooms = parseInt(req.query.bedrooms);
         if (isNaN(bedrooms)) {
             bedrooms = { $in:[1, 2, 3, 4, 5] };
@@ -91,10 +101,15 @@ export const getListings = async (req, res, next) => {
         const order = req.query.order || 'desc';
         const maxPrice = parseInt(req.query.price) || Infinity;
         const listings = await Listing.find({
-            name: {$regex: searchTerm, $options: 'i'},
-            city: {$regex: searchTerm, $options: 'i'},
-            state: {$regex: searchTerm, $options: 'i'},
-            country: {$regex: searchTerm, $options: 'i'},
+            $or: [
+                { name: { $regex: searchTerm, $options: 'i' } },
+                { city: { $regex: searchTerm, $options: 'i' } },
+                { state: { $regex: searchTerm, $options: 'i' } },
+                { country: { $regex: searchTerm, $options: 'i' } },
+                { description: { $regex: searchTerm, $options: 'i' } }
+            ],
+            city,
+            country,
             offer,
             furnished,
             parking,
