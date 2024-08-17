@@ -400,7 +400,7 @@ const Search = () => {
         <section className='grid grid-cols-2 sm:grid-cols-4 gap-x-2 gap-y-4 sm:gap-3 '>
           {loading && listings.length === 0 && <><ListingCardSkeleton /><ListingCardSkeleton /><ListingCardSkeleton /><ListingCardSkeleton /><ListingCardSkeleton /><ListingCardSkeleton /><ListingCardSkeleton /><ListingCardSkeleton /></>}
           {!loading && listings && listings.map((listing) => (
-              <Link to={`/listing/${listing._id}`}><ListingCard key={listing.imageURLs[0]} listing={listing} /></Link>
+              <Link to={`/listing/${listing._id}`} state={{pathBackTo:`/search?`}}><ListingCard key={listing.imageURLs[0]} listing={listing} /></Link>
           ))}
         </section>
       </div>

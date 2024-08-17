@@ -14,12 +14,14 @@ import {
   
 
 
-const SocialShare = ({url, title}) => {
+const SocialShare = ({url, title, isClipBoard}) => {
     const [linkCoppied, setLinkCoppied] = useState(false);
 
     const copyToClipboard =  () => {
       navigator.clipboard.writeText(url).then(() => {
         setLinkCoppied(true);
+        isClipBoard(true);
+        setTimeout(() => isClipBoard(false), 1000)
       }).catch(err => {
         console.error('Failed to copy: ', err);
       });

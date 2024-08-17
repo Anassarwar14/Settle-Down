@@ -247,10 +247,10 @@ function Profile() {
         <div className='divide-y max-w-5xl mx-auto p-4 mt-4  border rounded-lg animated-background bg-gradient-to-r from-teal-100 via-emerald-100 to-fuchsia-300'> 
           {listings.map((listing) => (
             <div key={listing._id} className='flex items-center justify-between text-emerald-600 hover:text-cyan-500 hover:scale-105 transition ease-in-out duration-200 rounded-lg hover:bg-gradient-to-r from-teal-100 via-emerald-100 to-emerald-50'>
-              <Link to={`/listing/${listing._id}`}>
+              <Link to={`/listing/${listing._id}`} state={{pathBackTo:'/profile'}}>
                 <img src={listing.imageURLs[0]} alt='listing-cover' className='w-20 h-16 my-2 sm:w-32 sm:h-20 object-contain rounded-xl smooth_rendering bg-gray-50'/>
               </Link>
-              <Link to={`/listing/${listing._id}`} className='flex-1 text-center'>
+              <Link to={`/listing/${listing._id}`} state={{pathBackTo:'/profile'}} className='flex-1 text-center'>
                 <p className='text-sm sm:text-base truncate'>{listing.name}</p>
                 <p className='text-xs truncate text-zinc-400 '>{listing.city}, {listing.country}</p>
               </Link>

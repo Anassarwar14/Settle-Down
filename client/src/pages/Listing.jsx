@@ -6,7 +6,7 @@ import { IoCameraOutline } from "react-icons/io5";
 import { PiArmchairThin, PiBathtubThin, PiBedThin, PiCarSimpleThin, PiCheckThin } from "react-icons/pi";
 import { FcCancel } from "react-icons/fc";
 import { PiCityLight } from "react-icons/pi";
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import LoadingSkeleton from '../components/LoadingSkeleton';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import SwiperCore from 'swiper';
@@ -22,11 +22,14 @@ const Listing = () => {
     SwiperCore.use([Navigation, Keyboard, Pagination]);
     const params = useParams();
     const navigate = useNavigate();
+    const location = useLocation();
+    const pathBackTo = (location.state && location.state.pathBackTo) || '/profile'
     const { currentUser } = useSelector((state) => state.user);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
     const [listing, setListing] = useState(null);
     const [share, setShare] = useState(false);
+    const [isClipBoard, setIsClipBoard] = useState(false)
     const [contact, setContact] = useState(false);
     const [landlord, setLandlord] = useState(null);
     const [confirmDeleteListing, setConfirmDeleteListing] = useState(false);
@@ -96,7 +99,7 @@ const Listing = () => {
             {listing && !loading && !error && (
                 <div className='mt-2 px-4'>
                     <Swiper navigation keyboard={{enabled:true}} speed={800} pagination={{ clickable: true  }} className='rounded-xl bg-slate-300 shadow-md' style={{ "--swiper-navigation-color": "#fff", "--swiper-pagination-color": "#fff", '--swiper-pagination-bullet-width': '10%', '--swiper-pagination-bullet-height': '2px'}}>
-                        <Link to={'/profile'}><div className='absolute z-10 top-4 left-4 w-12 h-12 rounded-full bg-gray-50 shadow-sm flex items-center justify-center text-4xl text-zinc-800 cursor-pointer hover:scale-105 '><IoIosArrowRoundBack className=''/></div></Link>
+                        <Link to={pathBackTo}><div className='absolute z-10 top-4 left-4 w-12 h-12 rounded-full bg-gray-50 shadow-sm flex items-center justify-center text-4xl text-zinc-800 cursor-pointer hover:scale-105 '><IoIosArrowRoundBack className=''/></div></Link>
                         <div className='absolute z-10 bottom-4 left-4 w-16 h-8 rounded-full bg-gray-50 shadow-sm flex items-center justify-center text-zinc-800 hover:opacity-60 hover:cursor-default gap-2'><IoCameraOutline className='text-2xl' />{listing.imageURLs.length}</div>
                         <Link to={'/all-photos'} state={{listing}}><div style={{background: `linear-gradient( to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.6)), url("${listing.imageURLs[1]}") center/cover no-repeat`, textShadow:"0 1px 0 black"}} className='absolute z-10 max-sm:top-4 sm:bottom-7 right-7 w-16 h-12 text-center sm:w-40 sm:h-24 object-cover smooth_rendering rounded-lg sm:rounded-2xl shadow-sm max-sm:text-xs sm:text-sm text-white font-bold flex items-center justify-center cursor-pointer hover:scale-105  border-opacity-30 bg-slate-400 text-sjadp'>View All Photos</div></Link>
                         {listing.imageURLs.map((url) => 
@@ -111,7 +114,7 @@ const Listing = () => {
                             )
                         )}
                     </Swiper>
-                    <section className='flex gap-2 sm:gap-8 p-4 sm:pr-0 flex-wrap'>
+                    <section className='flex gap-2 sm:gap-5 p-4 sm:pr-0 flex-wrap'>
                         <div className='w-[56rem] flex flex-col gap-2'>
                             <div className='flex max-sm:flex-col max-sm:gap-3 items-start sm:justify-between sm:gap-x-20 flex-wrap'>
                                 <h1 className='text-4xl sm:text-5xl text-zinc-800 font-bold'>{listing.name}</h1>    
@@ -139,12 +142,13 @@ const Listing = () => {
                         </div>
                         <aside className='max-sm:mx-auto sm:flex-1 flex flex-col gap-2'>
                             {listingsDelError && <p className='text-xs text-red-600 ml-8 mt-2'>{listingsDelError}</p>}
+                            { currentUser && listing.userRef === currentUser._id && 
                             <span className='sm:w-32 flex sm:items-center gap-2 max-sm:justify-end text-purple-800 '>
                                 <Link to={`/update-listing/${listing._id}`}>
                                     <MdOutlineModeEditOutline className='hover:bg-purple-300 hover:bg-opacity-50 sm:text-3xl rounded-full p-[0.1rem] sm:p-[0.46rem] cursor-pointer shadow-md' />
                                 </Link>
                                 <RiDeleteBin4Line onClick={() => setConfirmDeleteListing(listing._id)} className='hover:text-red-600 hover:bg-red-400 hover:bg-opacity-50 sm:text-3xl rounded-full p-[0.1rem] sm:p-[0.46rem] cursor-pointer shadow-md'/>
-                            </span>
+                            </span> }
                             <DeleteConfirm showPopUp={confirmDeleteListing} initiateDelete={() => handleDeleteListing(confirmDeleteListing)} handleCancel={() => setConfirmDeleteListing(false)} textDel={"Are you sure you want to delete this listing?"} titleDel={"Listing"}/>
                             <div className='w-full flex flex-col gap-2 p-4 shadow-xl border border-gray-200 bg-slate-50 rounded-2xl h-max'>
                                 <h4>Brief Information</h4>
@@ -172,7 +176,7 @@ const Listing = () => {
                     </section>
                 </div>
             )}
-            {share && <button onClick={() => setTimeout(() => setShare(false), 700) } className='cursor-default'><SocialShare share={setShare} url={`/listing/${params.listingId}`} title={listing.name} /></button>}
+            {(share || isClipBoard) && <button onClick={() => setTimeout(() => setShare(false), 50) } className='cursor-default'><SocialShare share={setShare} url={`/listing/${params.listingId}`} title={listing.name} isClipBoard={setIsClipBoard} /></button>}
             {contact && <ContactLandlord contact={setContact} landlord={landlord} listing={listing}/>}
         </main>
     )
