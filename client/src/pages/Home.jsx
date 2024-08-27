@@ -73,7 +73,7 @@ function Home() {
           <div className='mt-4 grid grid-cols-2 sm:grid-cols-9 gap-3'>
             {listings.length > 0 && listings.filter(listing => listing.offer ).slice(0, 3)
               .map((listing, index) => (
-                <Link to={`/listing/${listing._id}`} state={{pathBackTo:`/`}} className={`${index == 0 ? 'sm:col-span-4' : index == 1 ? 'sm:col-span-3' : 'max-sm:hidden sm:col-span-2'}`} ><ListingCard  listing={listing}/></Link>
+                <Link to={`/listing/${listing._id}`} state={{pathBackTo:`/`}} className={`flex items-stretch ${index == 0 ? 'sm:col-span-4' : index == 1 ? 'sm:col-span-3' : 'max-sm:hidden sm:col-span-2'}`} ><ListingCard  listing={listing}/></Link>
             ))}
           </div>
         </div>
@@ -86,7 +86,7 @@ function Home() {
           <div className='mt-4 grid grid-cols-2 sm:grid-cols-9 gap-3'>
             {listings.length > 0 && listings.filter(listing => listing.type ==='sell').slice(0, 3)
               .map((listing, index) => (
-                <Link to={`/listing/${listing._id}`} state={{pathBackTo:`/`}} className={`${index == 0 ? 'sm:col-span-4' : index == 1 ? 'sm:col-span-3' : 'max-sm:hidden sm:col-span-2'}`} ><ListingCard  listing={listing}/></Link>
+                <Link to={`/listing/${listing._id}`} state={{pathBackTo:`/`}} className={`flex items-stretch ${index == 0 ? 'sm:col-span-4' : index == 1 ? 'sm:col-span-3' : 'max-sm:hidden sm:col-span-2'}`} ><ListingCard  listing={listing}/></Link>
             ))}
           </div>
         </div>
@@ -99,7 +99,7 @@ function Home() {
           <div className='mt-4 grid grid-cols-2 sm:grid-cols-9 gap-3'>
             {listings.length > 0 && listings.filter(listing => listing.type ==='rent').slice(0, 3)
               .map((listing, index) => (
-                <Link to={`/listing/${listing._id}`} state={{pathBackTo:`/`}} className={`${index == 0 ? 'sm:col-span-4' : index == 1 ? 'sm:col-span-3' : 'max-sm:hidden sm:col-span-2'}`} ><ListingCard  listing={listing}/></Link>
+                <Link to={`/listing/${listing._id}`} state={{pathBackTo:`/`}} className={`flex items-stretch ${index == 0 ? 'sm:col-span-4' : index == 1 ? 'sm:col-span-3' : 'max-sm:hidden sm:col-span-2'}`} ><ListingCard  listing={listing}/></Link>
             ))}
           </div>
         </div>

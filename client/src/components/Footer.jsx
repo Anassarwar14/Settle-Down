@@ -9,7 +9,7 @@ import {
 
 const Footer = () => {
   return (
-    <footer className="bg-zinc-900 text-white py-8 pt-20 relative mt-20">
+    <footer className="bg-zinc-900 text-white py-8 pt-20 relative">
         <div className="flex flex-col absolute top-4 left-8">
             <div className='flex items-end gap-2'>
                 <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="100" height="100" viewBox="0 0 48 48">
@@ -25,7 +25,7 @@ const Footer = () => {
 
             <div className='sm:ml-10'>
                 <h3 className="font-semibold text-lg mb-2 sm:mb-4">Quick Links</h3>
-                <ul className="space-y-1 sm:space-y-2 text-sm ">
+                <ul className="space-y-1 sm:space-y-2 text-sm">
                     <Link to={'/profile'} className="block hover:underline">Account Information</Link>
                     <Link to={'/search?type=rent'} className="block hover:underline">Rent a Property</Link>
                     <Link to={'/search?type=sell'} className="block hover:underline">Buy a Property</Link>
@@ -33,17 +33,17 @@ const Footer = () => {
                 </ul>
             </div>
 
-            <div>
+            <div className='max-sm:ml-auto'>
                 <h3 className="font-semibold text-lg mb-2 sm:mb-4">Contact Us</h3>
                 <ul className="space-y-1 sm:space-y-2 text-sm">
                     <li>Phone: +1 234 567 890</li>
                     <li>Email: info@settledown.com</li>
-                    <li>Address: 123 Main St, Acton, Australia</li>
+                    <li>Address: 123 Main St, Khi, Pakistan</li>
                 </ul>
             </div>
 
             <div className='max-sm:col-span-2 max-sm:place-self-center'>
-                <h3 className="font-semibold text-lg mb-4 ml-10 ">Follow Us</h3>
+                <h3 className="font-semibold text-lg mb-4 ml-10">Follow Us</h3>
                 <div className="flex space-x-4">
                     <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="hover:opacity-85">
                         <FacebookIcon size={32} round />
@@ -61,7 +61,7 @@ const Footer = () => {
             </div>
         </div>
 
-        <div className="container mx-auto mt-8 border-t border-teal-600 pt-4 text-center text-sm text-teal-500">
+        <div className="container mx-auto mt-8 border-t border-gray-100 pt-4 text-center text-sm text-gray-100">
             &copy; 2024 Settle Down, Inc. All rights reserved.
         </div>
     </footer>

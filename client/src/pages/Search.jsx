@@ -271,7 +271,7 @@ const Search = () => {
 
 
   return (
-    <main>
+    <main className='mb-24'>
       <header className='max-sm:flex max-sm:flex-col-reverse relative'>
         <section className='mt-1 sm:mt-7 flex max-w-[76rem] ml-2 sm:mx-auto gap-20'>
           <div className='flex justify-start items-center gap-4'>
@@ -306,8 +306,8 @@ const Search = () => {
         
         <section className='mt-2 sm:mt-5 flex sm:mx-auto max-w-[78rem] items-center justify-between sm:border max-sm:border-y max-sm:border-teal-400 px-2 sm:pl-2 sm:pr-5 py-3 sm:py-1  sm:rounded-full bg-slate-50 '>
           <div className='flex gap-1 *:border *:border-teal-500 *:max-sm:w-12 *:rounded-full *:px-1 *:py-1 *:sm:px-7 *:sm:py-[0.6rem] text-md'>
-            <button type='button' onClick={() => setFilterData(prev => ({...prev, type: 'sell'}) ) } className={`text-teal-800 ${filterData.type === 'sell' ? 'bg-teal-500 text-white': 'bg-zinc-50 hover:bg-teal-100'}`}>Buy</button>
-            <button type='button' onClick={() => setFilterData(prev => ({...prev, type: 'rent'}) ) } className={`text-teal-800 ${filterData.type === 'rent' ? 'bg-teal-500 text-white': 'bg-zinc-50 hover:bg-teal-100' }`}>Rent</button>
+            <button type='button' onClick={() => setFilterData(prev => ({...prev, type: 'sell'}) ) } className={`text-teal-700 ${filterData.type === 'sell' ? 'bg-teal-500 text-white': 'bg-zinc-50 hover:bg-teal-100'}`}>Buy</button>
+            <button type='button' onClick={() => setFilterData(prev => ({...prev, type: 'rent'}) ) } className={`text-teal-700 ${filterData.type === 'rent' ? 'bg-teal-500 text-white': 'bg-zinc-50 hover:bg-teal-100' }`}>Rent</button>
           </div>
           <h1 className='text-3xl text-teal-600 font-extralight sm:ml-40 '><span className='max-sm:hidden'>Listing</span> Results</h1>
           <div className='flex sm:gap-[10rem] mr-2 sm:mr-8 max-sm:gap-4'>

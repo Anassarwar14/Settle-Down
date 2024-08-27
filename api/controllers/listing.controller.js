@@ -119,9 +119,10 @@ export const getListings = async (req, res, next) => {
             regularPrice:  { $lte: maxPrice }
         })
         .sort(
-            {'regularPrice': order}
-        ).sort(
-            {'createdAt': sort}
+            {
+                'regularPrice': order,
+                'createdAt': sort,
+            }
         ).limit(limit).skip(startIndex);
 
         return res.status(200).json(listings);
