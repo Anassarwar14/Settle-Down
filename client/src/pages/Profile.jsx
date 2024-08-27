@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { updateUserStart, updateUserSuccess, updateUserFailure, resetError, deleteUserStart, deleteUserSuccess, deleteUserFailure, signOutStart, signOutSuccess, signOutFailure } from '../redux/user/userSlice';
 import { app } from '../firebase';
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage'
-import { MdOutlineModeEditOutline, MdOutlinePlaylistAdd, MdErrorOutline, MdOutlineDeleteOutline} from "react-icons/md";
+import { MdOutlineModeEditOutline, MdOutlinePlaylistAdd, MdErrorOutline, MdOutlineDeleteOutline, MdError} from "react-icons/md";
 import { PiSignOut, PiSpinner } from "react-icons/pi";
 import { HiCheckBadge } from "react-icons/hi2";
 import { RiDeleteBin4Line } from "react-icons/ri";
@@ -19,6 +19,7 @@ import DeleteConfirm from '../components/DeleteConfirm';
 
 function Profile() {
   const dispatch = useDispatch();
+  const location = useLocation();
   const { currentUser, loading, error } = useSelector((state) => state.user);
   const [editMode, setEditMode] = useState(false);
   const [file, setFile] = useState(undefined);
@@ -33,6 +34,7 @@ function Profile() {
   const [listingsDelError, setListingsDelError] = useState(false);
   const [confirmDeleteListing, setConfirmDeleteListing] = useState(false);
   const fileRef = useRef(null);
+  const createListingRef = useRef(null);
 
   useEffect(() => {
     if (file) {
@@ -44,6 +46,12 @@ function Profile() {
     ShowListings();
   }, [])
   
+
+  useEffect(() => {
+    if (location.state?.scrollCreateListing) {
+      createListingRef.current?.scrollIntoView({ behavior: 'auto' });
+    }
+  }, [location.state]);
 
 
   function handleFileUpload (file) {
@@ -266,10 +274,10 @@ function Profile() {
           <DeleteConfirm showPopUp={confirmDeleteListing} initiateDelete={() => handleDeleteListing(confirmDeleteListing)} handleCancel={() => setConfirmDeleteListing(false)} textDel={"Are you sure you want to delete this listing?"} titleDel={"Listing"}/>
         </div>
       }
-      {showListingsError && <p className='text-red-600 text-xs ml-2 mt-2'>Error Loading Listings!</p>}
+      {showListingsError && <span className='text-xs   text-red-600 flex items-center gap-1 mt-4 ml-4'><MdError /><p>Error Loading Listings!</p></span>}
       <Link to={'/create-listing'}>
         <button type='button' className='text-sm sm:text-base border border-purple-500 sm:ml-7 transition ease-linear duration-200 hover:border-white hover:bg-gradient-to-r hover:from-purple-400 hover:from-2% hover:to-indigo-500 text-purple-700 hover:text-white rounded-3xl px-4 py-2 mt-3'>
-          <div className='flex items-center gap-1'>
+          <div ref={createListingRef} className={`${location.state?.scrollCreateListing && 'animate-ping'} flex items-center gap-1`}>
             <MdOutlinePlaylistAdd  className='sm:text-lg'/>
             Create Listing
           </div>

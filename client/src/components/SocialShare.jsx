@@ -4,9 +4,9 @@ import { TbCopyCheckFilled } from "react-icons/tb";
 import {
     FacebookShareButton,
     TwitterShareButton,
-    XIcon,
     LinkedinShareButton,
     WhatsappShareButton,
+    XIcon,
     FacebookIcon,
     LinkedinIcon,
     WhatsappIcon

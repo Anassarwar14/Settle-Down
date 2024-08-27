@@ -48,6 +48,8 @@ const Search = () => {
     offer: false,
   });
 
+  const firstRender = useRef(true);
+
   useEffect(() => {
     const countries = Countries.getCountries({
       sort: {
@@ -63,15 +65,20 @@ const Search = () => {
     setCountriesList(countryOptions);
   }, []);
 
-
+  
   useEffect(() => {
+    if(firstRender.current === true){
+      firstRender.current = false;
+      return;
+    }
+
     updateSearchQuery();
   }, [filterData])
-
+  
   useEffect(() => {
     console.log(listings);
   }, [listings])
-
+  
   useEffect(() => {
     const urlParmas = new URLSearchParams(location.search);
     const searchTermFromUrl = urlParmas.get('searchTerm');
@@ -86,7 +93,7 @@ const Search = () => {
     const furnishedTermFromUrl = urlParmas.get('furnished');
     const parkingTermFromUrl = urlParmas.get('parking');
     const offerTermFromUrl = urlParmas.get('offer');
-
+    
     if (
       searchTermFromUrl     ||
       sortTermFromUrl       ||
@@ -397,7 +404,7 @@ const Search = () => {
         )}
       </header>
       <div className='px-2 py-4 sm:px-7 sm:py-4 '>
-        <section className='grid grid-cols-2 sm:grid-cols-4 gap-x-2 gap-y-4 sm:gap-3 '>
+        <section className='grid grid-cols-2 sm:grid-cols-4 items-stretch gap-x-2 gap-y-4 sm:gap-3 '>
           {loading && listings.length === 0 && <><ListingCardSkeleton /><ListingCardSkeleton /><ListingCardSkeleton /><ListingCardSkeleton /><ListingCardSkeleton /><ListingCardSkeleton /><ListingCardSkeleton /><ListingCardSkeleton /></>}
           {!loading && listings && listings.map((listing) => (
               <Link to={`/listing/${listing._id}`} state={{pathBackTo:`/search?`}}><ListingCard key={listing.imageURLs[0]} listing={listing} /></Link>
