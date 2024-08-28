@@ -4,7 +4,6 @@ import { RiDiscountPercentFill } from "react-icons/ri";
 import { PiArmchairThin, PiBathtubThin, PiBedThin, PiCarSimpleThin } from 'react-icons/pi';
 import { PiArmchairFill } from "react-icons/pi";
 import { CiParking1 } from "react-icons/ci";
-import { LuParkingCircle } from "react-icons/lu";
 
 const ListingCard = ({listing}) => {
   return (

@@ -1,9 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
-// import backgroundVideo from '../assets/background.mp4';
 import backgroundVideo from '../assets/background2.mp4';
 import worldMap from '../assets/world.svg';
 import { Link } from 'react-router-dom';
-import { FaAnglesRight } from "react-icons/fa6";
 import { FiChevronRight } from "react-icons/fi";
 import { FiChevronsRight } from "react-icons/fi";
 import { RiSparkling2Line } from "react-icons/ri";
@@ -11,14 +9,7 @@ import { RiSearch2Fill } from "react-icons/ri";
 import { MdArrowRightAlt } from "react-icons/md";
 import ListingCard from '../components/ListingCard';
 import FAQList from '../components/FAQList';
-//style={{background: `url("https://images.unsplash.com/photo-1531898921534-93603e2839c9?q=80&w=1999&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D") center/cover no-repeat`, backgroundPositionY: '80%'}}
-//https://images.unsplash.com/photo-1496328289142-9a47ef5b544b?q=80&w=1933&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D
-//https://plus.unsplash.com/premium_photo-1697730288131-6684ca63584b?q=80&w=1771&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D
-//https://images.pexels.com/photos/1029606/pexels-photo-1029606.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2
-//https://images.pexels.com/photos/5997992/pexels-photo-5997992.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2
-//https://images.pexels.com/photos/593153/pexels-photo-593153.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2
-//https://images.pexels.com/photos/4120220/pexels-photo-4120220.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2
-//https://images.pexels.com/photos/18112362/pexels-photo-18112362/free-photo-of-roofs-of-old-buildings-in-strasbourg-france.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2
+
 function Home() {
 
   const [listings, setListings] = useState([]);

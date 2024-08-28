@@ -1,4 +1,3 @@
-import React, { useEffect } from 'react';
 import { FaGoogle } from "react-icons/fa";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
 import { app } from '../firebase';

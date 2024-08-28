@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import { IoIosSend } from "react-icons/io";
 import { Link } from 'react-router-dom';
 
@@ -6,25 +6,6 @@ const ContactLandlord = ({contact, landlord, listing}) => {
     const [message, setMessage] = useState(null);
     const [name, setName] = useState(null);
     const buttonRef = useRef(null); 
-    // const [landlord, setLandlord] = useState(null);
-
-    // useEffect(() => {
-    //   const fetchLandlord = async () => {
-    //     try {
-    //         const res = await fetch(`/api/user/${listing.userRef}`);
-    //         const data = await res.json();
-    //         if(data.success === false){
-    //             return;
-    //         }
-    //         setLandlord(data);
-    //     } catch (error) {
-    //         console.log(error);
-    //     }
-    //   }
-    //   fetchLandlord();
-    // }, [listing.userRef])
-    
-
 
   return (
     <>
