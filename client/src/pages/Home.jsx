@@ -12,21 +12,47 @@ import FAQList from '../components/FAQList';
 
 function Home() {
 
-  const [listings, setListings] = useState([]);
+  const [featuredListings, setFeaturedListings] = useState([]);
+  const [salesListings, setSalesListings] = useState([]);
+  const [rentListings, setRentListings] = useState([]);
+
   const featuredRef = useRef(null);
 
   useEffect(() => {
-    const fetchListings = async () => {
-      const res = await fetch('/api/listing/get');
-      const data = await res.json();
-      setListings(data);    
+    const fetchOfferListings = async () => {
+      try {
+        const res = await fetch('/api/listing/get?offer=true&limit=3');
+        const data = await res.json();
+        setFeaturedListings(data);      
+      } catch (error) {
+        console.log(error);
+      }
     }
-    fetchListings();
+    fetchOfferListings();
+
+    const fetchSalesListings = async () => {
+      try {
+        const res = await fetch('/api/listing/get?type=sell&limit=3');
+        const data = await res.json();
+        setSalesListings(data);      
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchSalesListings();
+
+    const fetchRentListings = async () => {
+      try {
+        const res = await fetch('/api/listing/get?type=rent&limit=3');
+        const data = await res.json();
+        setRentListings(data);      
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchRentListings();
   }, [])
   
-  useEffect(() => {
-    console.log(listings);
-  }, [listings])
   
   function scrollExplore(){
     featuredRef.current.scrollIntoView({behavior: 'smooth'})
@@ -62,8 +88,7 @@ function Home() {
           </div>
           <i className='max-sm:text-xs max-sm:text-zinc-600'>Wherever you're going, we can take you there</i>
           <div className='mt-4 grid grid-cols-2 sm:grid-cols-9 gap-3'>
-            {listings.length > 0 && listings.filter(listing => listing.offer ).slice(0, 3)
-              .map((listing, index) => (
+            {featuredListings.length > 0 && featuredListings.map((listing, index) => (
                 <Link to={`/listing/${listing._id}`} state={{pathBackTo:`/`}} className={`flex items-stretch ${index == 0 ? 'sm:col-span-4' : index == 1 ? 'sm:col-span-3' : 'max-sm:hidden sm:col-span-2'}`} ><ListingCard  listing={listing}/></Link>
             ))}
           </div>
@@ -73,10 +98,9 @@ function Home() {
             <h1 className='text-3xl font-light '><span className='max-sm:hidden'>Recent Properites for</span>  Sale</h1>
             <Link to={'/search?type=sell'} className='text-xs px-3 py-[0.3rem] border border-black rounded-full flex items-center gap-[0.2rem] hover:bg-black hover:text-white group transition duration-200'>View all <FiChevronRight className='text-md group-hover:hidden'/><FiChevronsRight className='hidden group-hover:inline text-md' /></Link>
           </div>
-          <i className='text-zinc-700 text-sm'>{listings.filter(listing => listing.type ==='sell').length} Properties for sale</i>
+          <p className='mt-2 text-zinc-500 text-xs'>Check out the latest properties available for sale.</p>
           <div className='mt-4 grid grid-cols-2 sm:grid-cols-9 gap-3'>
-            {listings.length > 0 && listings.filter(listing => listing.type ==='sell').slice(0, 3)
-              .map((listing, index) => (
+            {salesListings.length > 0 && salesListings.map((listing, index) => (
                 <Link to={`/listing/${listing._id}`} state={{pathBackTo:`/`}} className={`flex items-stretch ${index == 0 ? 'sm:col-span-4' : index == 1 ? 'sm:col-span-3' : 'max-sm:hidden sm:col-span-2'}`} ><ListingCard  listing={listing}/></Link>
             ))}
           </div>
@@ -86,10 +110,9 @@ function Home() {
             <h1 className='text-3xl font-light'><span className='max-sm:hidden'>Recent Properites for</span> Rent</h1>
             <Link to={'/search?type=rent'} className='text-xs px-3 py-[0.3rem] border border-black rounded-full flex items-center gap-[0.2rem] hover:bg-black hover:text-white group transition duration-200'>View all <FiChevronRight className='text-md group-hover:hidden'/><FiChevronsRight className='hidden group-hover:inline text-md' /></Link>
           </div>
-          <i className='text-zinc-700 text-sm'>{listings.filter(listing => listing.type ==='rent').length} Properties for rent</i>
+          <p className='mt-2 text-zinc-500 text-xs'>Discover a range of rental properties to suit your needs.</p>
           <div className='mt-4 grid grid-cols-2 sm:grid-cols-9 gap-3'>
-            {listings.length > 0 && listings.filter(listing => listing.type ==='rent').slice(0, 3)
-              .map((listing, index) => (
+            {rentListings.length > 0 && rentListings.map((listing, index) => (
                 <Link to={`/listing/${listing._id}`} state={{pathBackTo:`/`}} className={`flex items-stretch ${index == 0 ? 'sm:col-span-4' : index == 1 ? 'sm:col-span-3' : 'max-sm:hidden sm:col-span-2'}`} ><ListingCard  listing={listing}/></Link>
             ))}
           </div>
