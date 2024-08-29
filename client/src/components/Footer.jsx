@@ -18,12 +18,12 @@ const Footer = () => {
                 <h1 className='text-4xl'><span className='text-5xl'>Settle</span> Down</h1>
             </div>    
         </div>
-        <div className="container mx-auto grid grid-cols-2 gap-x-2 gap-y-8 max-sm:px-8 max-sm:mt-20 sm:grid-cols-4 sm:gap-14 sm:ml-40">
+        <div className="mx-auto grid grid-cols-2 gap-x-2 gap-y-8 max-sm:px-8 max-sm:mt-20 sm:grid-cols-4 sm:gap-14 sm:ml-40">
             <p className="text-sm text-gray-400 max-sm:col-span-2 sm:place-self-end">
                     Elevating your living experience with the best properties around the globe. Trust, transparency, and excellence.
             </p>
 
-            <div className='sm:ml-10'>
+            <div className='sm:ml-10 max-sm:ml-auto'>
                 <h3 className="font-semibold text-lg mb-2 sm:mb-4">Quick Links</h3>
                 <ul className="space-y-1 sm:space-y-2 text-sm">
                     <Link to={'/profile'} className="block hover:underline">Account Information</Link>
@@ -33,7 +33,7 @@ const Footer = () => {
                 </ul>
             </div>
 
-            <div className='max-sm:ml-auto'>
+            <div className='max-sm:col-start-1 max-sm:row-start-2'>
                 <h3 className="font-semibold text-lg mb-2 sm:mb-4">Contact Us</h3>
                 <ul className="space-y-1 sm:space-y-2 text-sm">
                     <li>Phone: +1 234 567 890</li>
@@ -43,7 +43,7 @@ const Footer = () => {
             </div>
 
             <div className='max-sm:col-span-2 max-sm:place-self-center'>
-                <h3 className="font-semibold text-lg mb-4 ml-10">Follow Us</h3>
+                <h3 className="font-semibold text-lg mb-4 max-sm:text-center sm:ml-10">Follow Us</h3>
                 <div className="flex space-x-4">
                     <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="hover:opacity-85">
                         <FacebookIcon size={32} round />
