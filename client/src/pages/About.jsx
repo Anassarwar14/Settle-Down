@@ -1,6 +1,12 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 function About() {
+
+  useEffect(() => {
+    window.scrollTo({top: 0});
+  }, [])
+  
+
   return (
     <section style={{background: 'url("https://images.pexels.com/photos/925743/pexels-photo-925743.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2") center/contain'}} className="py-6 sm:py-14 bg-gray-100">
       <div className="mx-auto px-6">

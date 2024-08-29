@@ -7,7 +7,7 @@ import ListingCardSkeleton from '../components/ListingCardSkeleton';
 import { Countries, Cities } from 'countries-states-cities-service';
 import { TbAdjustmentsHorizontal } from "react-icons/tb";
 import { HiOutlineSortAscending, HiOutlineSortDescending } from "react-icons/hi";
-import { MdError } from 'react-icons/md';
+import { MdError, MdKeyboardDoubleArrowDown, MdOutlineKeyboardArrowDown  } from 'react-icons/md';
 import { GiLeafSwirl } from "react-icons/gi";
 
 
@@ -21,6 +21,7 @@ const Search = () => {
   const [listings, setListings] = useState([]);
   const [loading, setLoading] = useState(false);
   const [priceError, setPriceError] = useState(false);
+  const [showMore, setShowMore] = useState(false);
   const [filterData, setFilterData] = useState({
     searchTerm:'',
     sort: 'desc',
@@ -51,6 +52,7 @@ const Search = () => {
   const firstRender = useRef(true);
 
   useEffect(() => {
+    window.scrollTo({top: 0})
     const countries = Countries.getCountries({
       sort: {
         mode: 'asc',
@@ -130,6 +132,9 @@ const Search = () => {
         const searchQuery = urlParmas.toString();
         const res = await fetch(`/api/listing/get?${searchQuery}`);
         const data = await res.json();
+        if(data.length > 12){
+          setShowMore(true);
+        }
         setListings(data);
         setLoading(false);        
       }
@@ -223,6 +228,19 @@ const Search = () => {
     }))
   }
   
+  async function onShowMoreClick () {
+    const startIndex = listings.length;
+    const urlParams = new URLSearchParams(location.search);
+    urlParams.set('startIndex', startIndex);
+    const searchQuery = urlParams.toString();
+    const res = await fetch(`/api/listing/get?${searchQuery}`);
+    const data = await res.json();
+    if(data.length < 12){
+      setShowMore(false);
+    }
+    setListings([...listings, ...data])
+  }
+
   const customStyles = {
     control: (provided, state) => ({
       ...provided,
@@ -271,7 +289,7 @@ const Search = () => {
 
 
   return (
-    <main className='mb-24'>
+    <main className='mb-40'>
       <header className='max-sm:flex max-sm:flex-col-reverse relative'>
         <section className='mt-1 sm:mt-7 flex max-w-[76rem] ml-2 sm:mx-auto gap-20'>
           <div className='flex justify-start items-center gap-4'>
@@ -403,16 +421,23 @@ const Search = () => {
           ></div>
         )}
       </header>
-      <div className='px-2 py-4 sm:px-7 sm:py-4 '>
-        <section className='grid grid-cols-2 sm:grid-cols-4 items-stretch gap-x-2 gap-y-4 sm:gap-3 '>
+      <div className='px-2 py-4 sm:px-7 sm:py-4'>
+        <section className='grid grid-cols-2 sm:grid-cols-4 gap-x-2 gap-y-4 sm:gap-3 '>
           {loading && listings.length === 0 && <><ListingCardSkeleton /><ListingCardSkeleton /><ListingCardSkeleton /><ListingCardSkeleton /><ListingCardSkeleton /><ListingCardSkeleton /><ListingCardSkeleton /><ListingCardSkeleton /></>}
           {!loading && listings && listings.map((listing) => (
               <Link to={`/listing/${listing._id}`} state={{pathBackTo:`/search?`}}><ListingCard key={listing.imageURLs[0]} listing={listing} /></Link>
           ))}
         </section>
+          {showMore && (
+            <button onClick={onShowMoreClick} className='group flex justify-center items-center gap-2 px-4 py-1 rounded-full border  w-full hover:underline underline-offset-2 mt-16 text-purple-500 '>
+              <MdOutlineKeyboardArrowDown className='group-hover:hidden' />
+              <MdKeyboardDoubleArrowDown className='hidden group-hover:block'/>
+              Show more    
+            </button>
+          )}
       </div>
         {!loading && listings.length === 0 && 
-          <div className="mt-[4vh] flex flex-col items-center justify-center h-full text-center p-4">
+          <div className="mt-[10vh] flex flex-col items-center justify-center h-full text-center p-4 mb-60">
             <GiLeafSwirl className="text-amber-500 text-9xl" />
             <h2 className="mt-4 text-lg font-semibold text-gray-700">Nothing left here!</h2>
             <p className="text-gray-500">Try adjusting your search or filters.</p>

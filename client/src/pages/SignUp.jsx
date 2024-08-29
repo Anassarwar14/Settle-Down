@@ -48,7 +48,7 @@ function SignUp() {
 
 
   return (
-    <div className='max-w-sm sm:max-w-md mx-auto py-3 sm:py-5 px-8 rounded-3xl mt-4 shadow-xl shadow-gray-300 bg-white mb-16'>
+    <div className='max-w-sm sm:max-w-md mx-auto py-3 sm:py-5 px-8 rounded-3xl mt-7 sm:mt-5 shadow-xl shadow-gray-300 bg-white mb-32'>
       <h1 className='text-center text-4xl font-light mb-7 mt-3 text-zinc-800'>Sign Up</h1>
       <form className='flex flex-col gap-5' onSubmit={ handleSubmit }>
         <input type='text' placeholder='Username' className='border p-3 rounded-lg focus:outline-none focus:border-teal-400 transition ease-in duration-200' id='username' onChange={handleChange}/>

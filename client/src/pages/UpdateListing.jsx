@@ -63,6 +63,7 @@ const UpdateListing = () => {
     }, [files, formData])
 
     useEffect(() => {
+      window.scrollTo({top: 0});
       const fetchListing = async () => {
             const listingId = params.listingId;
             const res = await fetch(`/api/listing/get/${listingId}`);
@@ -212,7 +213,7 @@ const UpdateListing = () => {
     } 
 
     return (
-      <main className='sm:py-5 sm:px-10 mx-auto'>
+      <main className='sm:py-5 sm:px-10 mx-auto mb-20'>
         <form onSubmit={handleSubmit} className='grid grid-cols-1 sm:grid-cols-5 sm:gap-6 '>
           <section className='flex flex-col gap-4 col-span-1 sm:col-span-3 bg-gray-100 border rounded-md p-4 '>
             <div className="flex items-center justify-between">

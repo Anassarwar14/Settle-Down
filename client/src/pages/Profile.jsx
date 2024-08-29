@@ -43,13 +43,16 @@ function Profile() {
   }, [file])
   
   useEffect(() => {
+    window.scrollTo({top: 0})
     ShowListings();
   }, [])
   
 
   useEffect(() => {
-    if (location.state?.scrollCreateListing) {
-      createListingRef.current?.scrollIntoView({ behavior: 'auto' });
+    if (location.state?.scrollCreateListing) { 
+      setTimeout(() => {
+        createListingRef.current?.scrollIntoView({ block:'center', behavior: 'smooth', inline: 'nearest'});
+      }, 300);
     }
   }, [location.state]);
 
@@ -188,7 +191,7 @@ function Profile() {
   
 
   return (
-    <div className='max-w-md sm:max-w-6xl py-3 sm:py-5 px-8 mx-auto mt-4 sm:mt-7 mb-12 bg-gray-100 shadow-sm border rounded-md'>
+    <div className='max-w-md sm:max-w-6xl py-3 sm:py-5 px-8 mx-auto mt-4 sm:mt-7 mb-20 bg-gray-100 shadow-sm border rounded-md'>
       <div className="flex items-center justify-between">
         <h1 className='text-2xl font-light text-zinc-700'>My Profile</h1>
         <button onClick={handleSignOut} className='flex items-center text-sm gap-1 text-rose-600 hover:underline shadow-sm sm:shadow-md rounded-full px-4 py-1'>Sign Out<PiSignOut /></button>
@@ -254,19 +257,19 @@ function Profile() {
       {listings && listings.length > 0 && 
         <div className='divide-y max-w-5xl mx-auto p-4 mt-4  border rounded-lg animated-background bg-gradient-to-r from-teal-100 via-emerald-100 to-teal-300'> 
           {listings.map((listing) => (
-            <div key={listing._id} className='flex items-center justify-between text-emerald-600 hover:text-cyan-500 hover:scale-105 transition ease-in-out duration-200 rounded-lg hover:bg-gradient-to-r from-teal-100 via-emerald-100 to-emerald-50'>
+            <div key={listing._id} className='flex items-center justify-around sm:justify-between text-emerald-600 hover:text-cyan-500 hover:scale-105 transition ease-in-out duration-200 rounded-lg hover:bg-gradient-to-r from-teal-100 via-emerald-100 to-emerald-50'>
               <Link to={`/listing/${listing._id}`} state={{pathBackTo:'/profile'}}>
                 <img src={listing.imageURLs[0]} alt='listing-cover' className='w-20 h-16 my-2 sm:w-32 sm:h-20 object-contain rounded-xl smooth_rendering bg-gray-50'/>
               </Link>
-              <Link to={`/listing/${listing._id}`} state={{pathBackTo:'/profile'}} className='flex-1 text-center'>
+              <Link to={`/listing/${listing._id}`} state={{pathBackTo:'/profile'}} className='sm:flex-1 text-center'>
                 <p className='text-sm sm:text-base truncate'>{listing.name}</p>
                 <p className='text-xs truncate text-zinc-400 '>{listing.city}, {listing.country}</p>
               </Link>
-              <span className='sm:w-32 flex max-sm:flex-col sm:justify-center sm:items-center gap-2 text-purple-800 '>
+              <span className='sm:w-32 flex max-sm:flex-col sm:justify-center sm:items-center gap-3 sm:gap-2 text-purple-800 '>
                 <Link to={`/update-listing/${listing._id}`}>
                   <MdOutlineModeEditOutline className='hover:bg-purple-300 hover:bg-opacity-50 sm:text-3xl rounded-full p-[0.1rem] sm:p-[0.46rem] cursor-pointer shadow-md' />
                 </Link>
-                <RiDeleteBin4Line onClick={() => setConfirmDeleteListing(listing._id)} className='hover:text-red-600 hover:bg-red-400 hover:bg-opacity-50 sm:text-3xl rounded-full p-[0.1rem] sm:p-[0.46rem] cursor-pointer shadow-md'/>
+                <RiDeleteBin4Line onClick={() => setConfirmDeleteListing(listing._id)} className=' hover:text-red-600 hover:bg-red-400 hover:bg-opacity-50 sm:text-3xl rounded-full p-[0.1rem] sm:p-[0.46rem] cursor-pointer shadow-md'/>
               </span>
             </div>
             ))

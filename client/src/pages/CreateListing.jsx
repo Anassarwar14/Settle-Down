@@ -63,6 +63,11 @@ const CreateListing = () => {
 
   }, [formData, files])
 
+  useEffect(() => {
+    window.scrollTo({top: 0})
+  }, [])
+  
+
   async function handleSubmit (e) {
     e.preventDefault();
     try {
@@ -198,7 +203,7 @@ const CreateListing = () => {
   }
 
   return (
-    <main className='sm:py-5 sm:px-10 mx-auto'>
+    <main className='sm:py-5 sm:px-10 mx-auto mb-20'>
       <form onSubmit={handleSubmit} className='grid grid-cols-1 sm:grid-cols-5 sm:gap-6 '>
         <section className='flex flex-col gap-4 col-span-1 sm:col-span-3 bg-gray-100 border rounded-md p-4 '>
           <div className="flex items-center justify-between">
@@ -320,7 +325,7 @@ const CreateListing = () => {
           </div>
         </section>
 
-        <aside className='h-max bg-gray-100 border rounded-md p-5 col-span-2'>
+        <aside className='bg-gray-100 sm:flex sm:flex-col sm:justify-between border rounded-md p-5 col-span-2'>
           <section className='flex flex-col gap-6'>
             <h2 className='text-xl font-medium text-zinc-700'>Property Image</h2>
             <div className="grid grid-cols-3 gap-3 *:rounded-md *:shadow-md">
@@ -363,7 +368,7 @@ const CreateListing = () => {
             <h2 className='text-lg text-zinc-900 font-medium'>Property Description</h2>
             <textarea required value={formData.description} onChange={handleChange} name="description" id="description" placeholder='Highlight the main selling points...' className='caret-teal-500 focus:outline-teal-500 min-h-36 border shadow-sm rounded-lg bg-gray-50 p-3 text-zinc-700'></textarea>
           </section>
-          <button type='button' onClick={scrollToTop} className='w-full mt-4 rounded-full text-fuchsia-800 border border-purple-400 hover:bg-purple-400 transition ease-in-out duration-300 flex items-center justify-center gap-2 p-2'><MdUpload className='text-fuchsia-700'/>Next</button>
+          <button type='button' onClick={scrollToTop} className='max-sm:mt-4 w-full rounded-full text-fuchsia-800 border border-purple-400 hover:bg-purple-400 transition ease-in-out duration-300 flex items-center justify-center gap-2 p-2'><MdUpload className='text-fuchsia-700'/>Next</button>
         </aside>
       </form>
     </main>
