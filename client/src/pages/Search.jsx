@@ -132,7 +132,7 @@ const Search = () => {
         const searchQuery = urlParmas.toString();
         const res = await fetch(`/api/listing/get?${searchQuery}`);
         const data = await res.json();
-        if(data.length > 12){
+        if(data.length > 11){
           setShowMore(true);
         }
         setListings(data);

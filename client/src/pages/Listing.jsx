@@ -165,7 +165,7 @@ const Listing = () => {
                             <DeleteConfirm showPopUp={confirmDeleteListing} initiateDelete={() => handleDeleteListing(confirmDeleteListing)} handleCancel={() => setConfirmDeleteListing(false)} textDel={"Are you sure you want to delete this listing?"} titleDel={"Listing"}/>
                             <div className='max-sm:mt-8 w-full flex flex-col gap-1 sm:gap-2 p-4 shadow-xl border border-gray-200 bg-slate-50 rounded-2xl'>
                                 <h4 className='text-teal-900 opacity-80'>Brief Information</h4>
-                                <h2 className='capitalize'><span className='font-semibold text-md'>Owner</span>: {landlord && landlord.username}{!currentUser && <span className='text-sm text-zinc-600'>hidden<i className='text-xs'> (sign in to view or contact)</i></span>}</h2>
+                                <h2 className='capitalize flex items-center gap-1'>{landlord && <img className='w-5 h-5 rounded-full' src={landlord.avatar}/>}<span className='font-semibold text-md'>Owner</span>: {landlord && landlord.username}{!currentUser && <span className='text-sm text-zinc-600'>hidden<i className='text-xs'> (sign in to view or contact)</i></span>}</h2>
                                 <div className='mt-4 flex justify-around items-center border bg-gray-100 rounded-lg p-1 *:flex *:items-center *:gap-2 *:text-sm *:font-semibold'>
                                     <p><PiBedThin className='text-xl' />{listing.bedrooms}</p>
                                     <p><PiBathtubThin className='text-xl'/>{listing.bathrooms}</p>
