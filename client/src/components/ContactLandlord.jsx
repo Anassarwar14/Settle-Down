@@ -12,7 +12,7 @@ const ContactLandlord = ({contact, landlord, listing}) => {
         {landlord && 
             <div className='fixed inset-0 z-50'>
                 <div className='absolute inset-0 bg-black bg-opacity-90 flex items-center justify-center'>
-                    <form onSubmit={(e) => {e.preventDefault(); buttonRef.current.click()}} className="min-w-[30rem] flex flex-col justify-center flex-wrap space-y-3 p-4 bg-white rounded-xl opacity-90">
+                    <form onSubmit={(e) => {e.preventDefault(); buttonRef.current.click()}} className="min-w-[26rem] sm:min-w-[30rem] flex flex-col justify-center flex-wrap space-y-3 p-4 bg-white rounded-xl opacity-90">
                         <h1 className='text-3xl font-semibold text-purple-700 relative before:content-[""] before:absolute before:w-[30%] before:bottom-0 before:border-b before:border-b-teal-500 '>Contact Landlord</h1>
                         <h2>Email <span className='font-semibold'>{landlord.username}</span> for <span className='font-semibold'>{listing.name}</span></h2>
                         <label htmlFor="name">Your Name</label>
